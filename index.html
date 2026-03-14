@@ -2063,7 +2063,7 @@
     <!-- Header -->
     <header id="header">
         <nav>
-            <a href="index.html" class="logo" id="adminLogo">
+            <a href="index.html" class="logo" id="adminLogo" onclick="return handleLogoClick(event)">
                 <img src="ezentia.png" alt="EZENTIA" class="logo-img" width="42" height="42">
             </a>
             
@@ -2875,24 +2875,50 @@
             });
         }
 
-        // ===== ADMIN ACCESS (5 clicks) =====
+                // ===== ADMIN ACCESS (5 clicks) =====
+        // Solo funciona si NO estamos en index.html (para evitar duplicación de página)
         const adminLogo = document.getElementById('adminLogo');
+
         if (adminLogo) {
             let clickCount = 0;
             let clickTimer = null;
-            
+
             adminLogo.addEventListener('click', (e) => {
+                const isIndexPage = window.location.pathname.includes('index') || 
+                                   window.location.pathname === '/' || 
+                                   window.location.pathname.endsWith('/');
+
+                // Si estamos en index.html, no hacer nada (permitir navegación normal)
+                if (isIndexPage) {
+                    clickCount = 0; // Resetear contador
+                    return; // Salir sin prevenir default
+                }
+
+                // En otras páginas, activar el contador de 5 clicks
+                e.preventDefault();
+
                 if (clickTimer) clearTimeout(clickTimer);
-                
+
                 clickCount++;
+                console.log(`Click ${clickCount}/5 en logo para acceso admin`);
+
+                // Feedback visual sutil (opcional)
+                if (clickCount === 3) {
+                    adminLogo.style.transform = 'scale(1.1)';
+                    setTimeout(() => adminLogo.style.transform = '', 200);
+                }
+
                 clickTimer = setTimeout(() => { 
                     clickCount = 0; 
                 }, 1000);
-                
+
                 if (clickCount >= 5) { 
                     clickCount = 0; 
+                    clearTimeout(clickTimer);
                     window.location.href = 'admin.html'; 
                 }
+            });
+        }
             });
         }
 
