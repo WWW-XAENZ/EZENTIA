@@ -6,8 +6,8 @@
     <title>EZENTIA - Panel de Administración</title>
     <link rel="icon" type="image/png" href="ezentia.png">
 
-    <!-- SUPABASE SDK - Versión UMD correcta -->
-    <script src="https://unpkg.com/@supabase/supabase-js@2.39.0/dist/umd/supabase.js"></script>
+    <!-- SUPABASE SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
 
     <style>
         @font-face {
@@ -1274,6 +1274,8 @@
                     </div>
                 </div>
 
+                                </div>
+
                 <div id="sales" class="panel">
                     <div class="glass-card">
                         <h2>
@@ -1351,29 +1353,113 @@
 
     <script>
         // ==========================================
-        // CONFIGURACIÓN SUPABASE - REEMPLAZA ESTAS LLAVES
+        // CONFIGURACIÓN SUPABASE
         // ==========================================
         
-        // ⚠️ REEMPLAZA CON TUS LLAVES DE SUPABASE:
         const SUPABASE_URL = 'https://dzcpxzulfnrojoshkwgm.supabase.co';  
-        const SUPABASE_KEY = 'sb_publishable_fQwV5kAB6eYR1xNWi980JA_8YUi14_N';  
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6Y3B4enVsZm5yb2pvc2hrd2dtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxODY4MjgsImV4cCI6MjA4ODc2MjgyOH0.0wMkeMk2WCqw13EgTiJjhl5VoZTPIlKQcnACeE1OLe8';  
         
-        // Inicializar cliente Supabase (formato UMD correcto)
-        let supabaseClient;
-        try {
-            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-            console.log('Supabase conectado correctamente');
-        } catch (e) {
-            console.error('Error conectando Supabase:', e);
+        let supabaseClient = null;
+        
+        function initSupabase() {
+            try {
+                if (typeof supabase === 'undefined' || !supabase.createClient) {
+                    console.warn('SDK de Supabase no encontrado');
+                    return false;
+                }
+                
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                console.log('✅ Supabase inicializado correctamente');
+                return true;
+                
+            } catch (error) {
+                console.error('❌ Error inicializando Supabase:', error);
+                supabaseClient = null;
+                return false;
+            }
         }
 
         const ADMIN_PASSWORD = 'Bonilla67@';
         let currentUser = localStorage.getItem('ezentia_admin_session');
+        let loginAttempts = parseInt(localStorage.getItem('ezentia_login_attempts')) || 0;
+        const MAX_ATTEMPTS = 5;
         let products = [];
         let sales = [];
 
         // ==========================================
-        // FUNCIONES DE SINCRONIZACIÓN CON SUPABASE
+// FUNCIÓN PARA MIGRAR PRODUCTOS LOCALES A LA NUBE
+// ==========================================
+
+async function migrateLocalToCloud() {
+    if (!supabaseClient) {
+        alert('Supabase no está conectado');
+        return;
+    }
+
+    const stored = localStorage.getItem('ezentia_products');
+    if (!stored) {
+        alert('No hay productos en localStorage');
+        return;
+    }
+
+    const localProducts = JSON.parse(stored);
+    if (localProducts.length === 0) {
+        alert('No hay productos para migrar');
+        return;
+    }
+
+    if (!confirm(`¿Subir ${localProducts.length} productos a la nube?`)) return;
+
+    showSyncStatus('Migrando a la nube...', 'syncing');
+
+    let successCount = 0;
+    let errorCount = 0;
+
+    for (const product of localProducts) {
+        try {
+            const { error } = await supabaseClient
+                .from('products')
+                .upsert([{
+                    id: product.id,
+                    name: product.name,
+                    brand: product.brand,
+                    cat: product.cat,
+                    price: product.price,
+                    stock: product.stock,
+                    image: product.image,
+                    presentation: product.presentation,
+                    notes: product.notes,
+                    sillage: product.sillage,
+                    status: product.status,
+                    "desc": product.desc  // Entre comillas por ser palabra reservada
+                }], { onConflict: 'id' });
+
+            if (error) {
+                console.error('Error migrando producto:', product.name, error);
+                errorCount++;
+            } else {
+                successCount++;
+            }
+        } catch (err) {
+            console.error('Error:', err);
+            errorCount++;
+        }
+    }
+
+    if (errorCount === 0) {
+        showSyncStatus(`${successCount} productos migrados ✓`, 'success');
+        alert(`✅ ${successCount} productos subidos correctamente a la nube`);
+    } else {
+        showSyncStatus(`${successCount} migrados, ${errorCount} errores`, 'error');
+        alert(`⚠️ ${successCount} migrados, ${errorCount} con errores\nRevisa la consola (F12)`);
+    }
+
+    // Recargar desde la nube para confirmar
+    await loadProductsFromCloud();
+}
+
+        // ==========================================
+        // FUNCIONES DE SINCRONIZACIÓN
         // ==========================================
 
         function showSyncStatus(message, type = 'syncing') {
@@ -1383,31 +1469,40 @@
             indicator.style.display = 'inline-flex';
             indicator.className = `sync-indicator ${type}`;
             
-            const icon = type === 'syncing' ? 
-                '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>' :
-                type === 'error' ?
-                '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>' :
-                '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+            const icons = {
+                syncing: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>',
+                error: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>',
+                success: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>'
+            };
             
-            indicator.innerHTML = `${icon}<span>${message}</span>`;
+            indicator.innerHTML = `${icons[type] || icons.syncing}<span>${message}</span>`;
             
             if (type !== 'syncing') {
-                setTimeout(() => {
-                    indicator.style.display = 'none';
-                }, 3000);
+                setTimeout(() => indicator.style.display = 'none', 3000);
             }
         }
 
         // Cargar productos desde Supabase
         async function loadProductsFromCloud() {
+            // Cargar local primero para UI rápida
+            const stored = localStorage.getItem('ezentia_products');
+            if (stored) {
+                try {
+                    products = JSON.parse(stored);
+                    renderProducts();
+                    updateStats();
+                } catch (e) {
+                    products = [];
+                }
+            }
+
             if (!supabaseClient) {
                 console.log('Supabase no disponible, usando localStorage');
-                loadFromLocalStorage();
                 return;
             }
 
-            showSyncStatus('Cargando productos...', 'syncing');
-            
+            showSyncStatus('Conectando con la nube...', 'syncing');
+
             try {
                 const { data, error } = await supabaseClient
                     .from('products')
@@ -1418,38 +1513,46 @@
                 
                 if (data && data.length > 0) {
                     products = data.map(p => ({
-                        id: p.id,
-                        name: p.name,
-                        brand: p.brand,
-                        cat: p.cat,
-                        price: p.price,
-                        stock: p.stock,
-                        image: p.image,
-                        presentation: p.presentation,
-                        notes: p.notes,
-                        sillage: p.sillage,
-                        status: p.status,
-                        desc: p.desc
+                        id: parseInt(p.id) || p.id,
+                        name: p.name || '',
+                        brand: p.brand || '',
+                        cat: p.cat || 'unisex',
+                        price: parseFloat(p.price) || 0,
+                        stock: parseInt(p.stock) || 0,
+                        image: p.image || 'ezentia.png',
+                        presentation: p.presentation || '',
+                        notes: p.notes || '',
+                        sillage: p.sillage || 'Moderado',
+                        status: p.status || 'normal',
+                        desc: p.desc || ''
                     }));
                     
                     localStorage.setItem('ezentia_products', JSON.stringify(products));
-                    showSyncStatus('Sincronizado con la nube', 'success');
+                    showSyncStatus('Sincronizado con la nube ✓', 'success');
+                    renderProducts();
+                    updateStats();
                 } else {
-                    loadFromLocalStorage();
+                    showSyncStatus('No hay datos en la nube', 'error');
                 }
             } catch (err) {
                 console.error('Error cargando productos:', err);
-                showSyncStatus('Error de conexión, usando local', 'error');
-                loadFromLocalStorage();
+                showSyncStatus('Sin conexión, usando local', 'error');
             }
         }
 
         // Cargar ventas desde Supabase
         async function loadSalesFromCloud() {
-            if (!supabaseClient) {
-                loadSalesFromLocal();
-                return;
+            const stored = localStorage.getItem('ezentia_sales');
+            if (stored) {
+                try {
+                    sales = JSON.parse(stored);
+                    renderSalesTable();
+                } catch (e) {
+                    sales = [];
+                }
             }
+
+            if (!supabaseClient) return;
 
             try {
                 const { data, error } = await supabaseClient
@@ -1461,37 +1564,21 @@
                 
                 if (data && data.length > 0) {
                     sales = data.map(s => ({
-                        id: s.id,
-                        client: s.client,
-                        productId: s.product_id,
-                        productName: s.product_name,
-                        quantity: s.quantity,
-                        total: s.total,
-                        date: s.date,
-                        status: s.status
+                        id: parseInt(s.id) || s.id,
+                        client: s.client || '',
+                        productId: parseInt(s.product_id) || s.product_id,
+                        productName: s.product_name || '',
+                        quantity: parseInt(s.quantity) || 1,
+                        total: parseFloat(s.total) || 0,
+                        date: s.date || new Date().toLocaleDateString('es-CO'),
+                        status: s.status || 'pendiente'
                     }));
                     
                     localStorage.setItem('ezentia_sales', JSON.stringify(sales));
-                } else {
-                    loadSalesFromLocal();
+                    renderSalesTable();
                 }
             } catch (err) {
                 console.error('Error cargando ventas:', err);
-                loadSalesFromLocal();
-            }
-        }
-
-        function loadFromLocalStorage() {
-            const stored = localStorage.getItem('ezentia_products');
-            if (stored) {
-                products = JSON.parse(stored);
-            }
-        }
-
-        function loadSalesFromLocal() {
-            const stored = localStorage.getItem('ezentia_sales');
-            if (stored) {
-                sales = JSON.parse(stored);
             }
         }
 
@@ -1500,7 +1587,7 @@
             if (!supabaseClient) return false;
             
             try {
-                const { data, error } = await supabaseClient
+                const { error } = await supabaseClient
                     .from('products')
                     .upsert([{
                         id: product.id,
@@ -1548,7 +1635,7 @@
             if (!supabaseClient) return false;
             
             try {
-                const { data, error } = await supabaseClient
+                const { error } = await supabaseClient
                     .from('sales')
                     .insert([{
                         id: sale.id,
@@ -1606,25 +1693,56 @@
         }
 
         // ==========================================
-        // FUNCIONES DE AUTENTICACIÓN
+        // AUTENTICACIÓN CON LÍMITE DE 5 INTENTOS
         // ==========================================
 
+        // Verificar si hay sesión activa al cargar
         if (currentUser) {
-            showAdminPanel();
+            document.addEventListener('DOMContentLoaded', () => {
+                initSupabase();
+                showAdminPanel();
+            });
         }
 
         function login(e) {
             e.preventDefault();
+            
+            // Verificar límite de intentos
+            if (loginAttempts >= MAX_ATTEMPTS) {
+                alert('Ha excedido el número máximo de intentos. Contacte al administrador.');
+                return;
+            }
+            
             const password = document.getElementById('password').value;
 
             if (password === ADMIN_PASSWORD) {
+                // Login exitoso - resetear intentos
                 localStorage.setItem('ezentia_admin_session', 'active');
+                localStorage.removeItem('ezentia_login_attempts');
+                loginAttempts = 0;
                 currentUser = 'active';
+                
+                initSupabase();
                 showAdminPanel();
             } else {
-                alert('Contraseña incorrecta. Intente nuevamente.');
-                document.getElementById('password').value = '';
-                document.getElementById('password').focus();
+                // Login fallido - incrementar intentos
+                loginAttempts++;
+                localStorage.setItem('ezentia_login_attempts', loginAttempts);
+                
+                const remaining = MAX_ATTEMPTS - loginAttempts;
+                
+                if (remaining === 0) {
+                    // Bloquear después de 5 intentos fallidos
+                    alert('Contraseña incorrecta. Ha agotado todos los intentos. El sistema está bloqueado.');
+                    document.getElementById('password').disabled = true;
+                    document.querySelector('.login-form button').disabled = true;
+                    document.querySelector('.login-form button').style.opacity = '0.5';
+                    document.querySelector('.login-form button').style.cursor = 'not-allowed';
+                } else {
+                    alert(`Contraseña incorrecta. Le quedan ${remaining} intento${remaining !== 1 ? 's' : ''}.`);
+                    document.getElementById('password').value = '';
+                    document.getElementById('password').focus();
+                }
             }
         }
 
@@ -1640,12 +1758,8 @@
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('adminPanel').classList.remove('hidden');
             
-            // Cargar datos desde la nube o local
             await loadProductsFromCloud();
             await loadSalesFromCloud();
-            
-            updateStats();
-            renderProducts();
         }
 
         // ==========================================
@@ -1785,7 +1899,7 @@
                 showSyncStatus('Guardado localmente', 'error');
             }
             
-            clearForm();
+            clearForm 
             renderProducts();
             updateStats();
 
@@ -1828,7 +1942,7 @@
             document.getElementById('productStatus').value = product.status || 'normal';
             document.getElementById('productDesc').value = product.desc || '';
 
-            document.getElementById('productForm').            scrollIntoView({ behavior: 'smooth', block: 'center' });
+            document.getElementById('productForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
         async function deleteProduct(id) {
@@ -2072,7 +2186,9 @@
         // ==========================================
 
         document.addEventListener('DOMContentLoaded', () => {
+            // Si hay sesión activa, inicializar Supabase y mostrar panel
             if (currentUser) {
+                initSupabase();
                 showAdminPanel();
             }
         });
