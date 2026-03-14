@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosotros | EZENTIA Perfumería Luxury</title>
+    <meta name="description" content="Conoce la historia de EZENTIA, tu destino para fragancias de lujo originales en Colombia. Más de 500 clientes satisfechos.">
+    <meta name="keywords" content="perfumería luxury, fragancias originales, Lattafa, Nautica, perfumes Colombia">
+    <meta property="og:title" content="Nosotros | EZENTIA Perfumería Luxury">
+    <meta property="og:description" content="Descubre nuestra historia y compromiso con la calidad">
+    <link rel="icon" type="image/png" href="ezentia.png">
+    <style>
+        @font-face {
+            font-family: 'Hoefler Text';
+            src: local('Hoefler Text'), local('HoeflerText');
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        @font-face {
+            font-family: 'Hoefler Text';
+            src: local('Hoefler Text Italic'), local('HoeflerText-Italic');
+            font-weight: normal;
+            font-style: italic;
+        }
+
+        :root {
+            /* Colores principales según manual de marca */
+            --brown-dark: #423836;
+            --brown-rgb: 66, 56, 54;
+            --gray-light: #c1bfbf;
+            --gray-medium: #706f6f;
+            --yellow-primary: #e99c32;
+            --yellow-light: #f5b85a;
+            --yellow-dark: #c47d20;
+            
+            /* Aplicaciones */
+            --bg-primary: #423836;
+            --bg-secondary: #2a2423;
+            --text-primary: #c1bfbf;
+            --text-secondary: #706f6f;
+            --accent: #e99c32;
+            --white: #ffffff;
+            
+            /* Glass effect actualizado */
+            --glass-bg: rgba(66, 56, 54, 0.45);
+            --glass-border: rgba(233, 156, 50, 0.18);
+            --glass-blur: blur(20px);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Hoefler Text', 'Times New Roman', serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(to bottom, var(--yellow-dark), var(--yellow-primary)); border-radius: 10px; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInLeft { from { opacity: 0; transform: translateX(-60px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeInRight { from { opacity: 0; transform: translateX(60px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-18px); } }
+        @keyframes floatSlow { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-25px); } }
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes particleFloat { 0% { transform: translateY(100vh); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-100px); opacity: 0; } }
+        @keyframes counterUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes borderGlow { 0%, 100% { border-color: rgba(233, 156, 50, 0.2); } 50% { border-color: rgba(233, 156, 50, 0.5); } }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* Diamond floating elements */
+        .float-diamond { width: 10px; height: 10px; background: var(--yellow-primary); transform: rotate(45deg); opacity: 0.1; }
+        .float-square { width: 7px; height: 7px; border: 1px solid var(--yellow-primary); opacity: 0.12; }
+        .float-cross { position: relative; width: 14px; height: 14px; opacity: 0.08; }
+        .float-cross::before, .float-cross::after { content: ''; position: absolute; background: var(--yellow-primary); }
+        .float-cross::before { width: 1px; height: 100%; left: 50%; transform: translateX(-50%); }
+        .float-cross::after { width: 100%; height: 1px; top: 50%; transform: translateY(-50%); }
+
+        /* ===== PARTICLES ===== */
+        .particles-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+        .particle { position: absolute; width: 3px; height: 3px; background: var(--yellow-primary); border-radius: 50%; animation: particleFloat linear infinite; opacity: 0; }
+
+        /* ===== HEADER ===== */
+        header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            padding: 18px 50px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        header.scrolled {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            padding: 12px 50px;
+        }
+
+        nav { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; position: relative; }
+
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-img { height: 42px; width: auto; filter: drop-shadow(0 0 10px rgba(233, 156, 50, 0.3)); transition: filter 0.3s ease; }
+        .logo:hover .logo-img { filter: drop-shadow(0 0 20px rgba(233, 156, 50, 0.6)); }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .nav-right { display: flex; align-items: center; gap: 15px; margin-left: auto; }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 13px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            position: relative;
+            transition: color 0.3s ease;
+            padding: 5px 0;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--yellow-primary), transparent);
+            transition: width 0.4s ease;
+        }
+
+        .nav-links a:hover, .nav-links a.active { color: var(--yellow-primary); }
+        .nav-links a:hover::before, .nav-links a.active::before { width: 100%; }
+        
+        /* Panel link for admin */
+        .nav-links a.panel-link {
+            color: var(--yellow-primary) !important;
+            font-weight: bold;
+            border: 1px solid var(--yellow-primary);
+            padding: 8px 16px !important;
+            background: rgba(233, 156, 50, 0.1);
+            transition: all 0.3s;
+        }
+        
+        .nav-links a.panel-link:hover {
+            background: rgba(233, 156, 50, 0.25) !important;
+            box-shadow: 0 0 15px rgba(233, 156, 50, 0.3);
+        }
+
+        /* Cart Icon */
+        .cart-icon { position: relative; cursor: pointer; display: flex; align-items: center; padding: 8px; background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); transition: all 0.3s ease; }
+        .cart-icon:hover { border-color: var(--yellow-primary); background: rgba(255, 254, 253, 0.1); }
+        .cart-icon svg { width: 20px; height: 20px; fill: var(--text-primary); transition: fill 0.3s ease; }
+        .cart-icon:hover svg { fill: var(--yellow-primary); }
+        .cart-count { position: absolute; top: -5px; right: -5px; background: linear-gradient(135deg, var(--yellow-dark), var(--yellow-primary)); color: var(--bg-primary); font-size: 10px; min-width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+
+        .menu-toggle { display: none; flex-direction: column; gap: 6px; cursor: pointer; padding: 8px; background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); }
+        .menu-toggle span { width: 22px; height: 1px; background: var(--yellow-primary); transition: all 0.3s ease; display: block; }
+
+        /* ===== HERO ===== */
+        .hero { padding: 180px 50px 120px; background: var(--bg-primary); text-align: center; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(ellipse at 50% 30%, rgba(233, 156, 50, 0.07) 0%, transparent 60%); }
+        .hero-content { position: relative; z-index: 2; max-width: 800px; margin: 0 auto; }
+        .hero-eyebrow { font-size: 11px; letter-spacing: 5px; text-transform: uppercase; color: var(--yellow-primary); margin-bottom: 15px; display: block; opacity: 0; animation: fadeInUp 0.8s ease 0.2s forwards; }
+        .hero-title { font-family: 'Hoefler Text', serif; font-size: 60px; font-weight: 400; margin-bottom: 20px; opacity: 0; animation: fadeInUp 0.8s ease 0.4s forwards; background: linear-gradient(135deg, var(--text-primary) 0%, var(--yellow-light) 50%, var(--text-primary) 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero-title span { color: var(--yellow-primary); -webkit-text-fill-color: var(--yellow-primary); }
+        .hero-subtitle { font-size: 20px; color: var(--text-secondary); font-style: italic; opacity: 0; animation: fadeInUp 0.8s ease 0.6s forwards; }
+        .floating-element { position: absolute; animation: float ease-in-out infinite; pointer-events: none; }
+
+        /* ===== STATS SECTION ===== */
+        .stats-section { padding: 60px 50px; background: var(--bg-secondary); position: relative; }
+        .stats-section::before, .stats-section::after { content: ''; position: absolute; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--yellow-primary), transparent); }
+        .stats-section::before { top: 0; }
+        .stats-section::after { bottom: 0; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; max-width: 1100px; margin: 0 auto; }
+        .stat-card { background: var(--glass-bg); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); padding: 35px 20px; text-align: center; transition: all 0.4s ease; animation: borderGlow 4s ease-in-out infinite; }
+        .stat-card:nth-child(2) { animation-delay: -1s; }
+        .stat-card:nth-child(3) { animation-delay: -2s; }
+        .stat-card:nth-child(4) { animation-delay: -3s; }
+        .stat-card:hover { transform: translateY(-6px); border-color: rgba(233, 156, 50, 0.4); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4); }
+        .stat-number { font-family: 'Hoefler Text', serif; font-size: 48px; color: var(--yellow-primary); line-height: 1; margin-bottom: 8px; }
+        .stat-label { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-secondary); }
+
+        /* ===== ABOUT SECTION ===== */
+        .about-section { padding: 120px 50px; background: var(--bg-primary); position: relative; }
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; max-width: 1100px; margin: 0 auto; align-items: center; }
+        .about-image { opacity: 0; animation: fadeInLeft 1s ease 0.3s forwards; }
+        .about-image-wrapper { width: 100%; height: 480px; background: var(--glass-bg); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        .about-image-wrapper::before, .about-image-wrapper::after { content: ''; position: absolute; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--yellow-primary), transparent); }
+        .about-image-wrapper::before { top: 0; }
+        .about-image-wrapper::after { bottom: 0; }
+        .about-image-inner { position: relative; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+        .about-ring { position: absolute; width: 200px; height: 200px; border: 1px solid rgba(233, 156, 50, 0.2); border-radius: 50%; animation: rotate 20s linear infinite; }
+        .about-ring::before { content: ''; position: absolute; top: -4px; left: 50%; width: 8px; height: 8px; background: var(--yellow-primary); border-radius: 50%; transform: translateX(-50%); box-shadow: 0 0 10px var(--yellow-primary); }
+        .about-icon { font-size: 80px; animation: float 4s ease-in-out infinite; position: relative; z-index: 2; }
+        .about-image-quote { position: absolute; bottom: 30px; left: 30px; right: 30px; background: var(--glass-bg); backdrop-filter: blur(15px); border: 1px solid var(--glass-border); padding: 20px; }
+        .about-image-quote p { font-style: italic; font-size: 16px; color: var(--yellow-light); line-height: 1.6; }
+        .about-content { opacity: 0; animation: fadeInRight 1s ease 0.5s forwards; }
+        .about-eyebrow { font-size: 11px; letter-spacing: 5px; text-transform: uppercase; color: var(--yellow-primary); margin-bottom: 15px; display: block; }
+        .about-content h2 { font-family: 'Hoefler Text', serif; font-size: 42px; font-weight: 400; margin-bottom: 30px; line-height: 1.2; }
+        .about-content h2 span { color: var(--yellow-primary); }
+        .about-content p { color: var(--text-secondary); font-size: 17px; line-height: 1.9; margin-bottom: 22px; }
+        .owner-card { background: var(--glass-bg); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); padding: 30px; margin-top: 35px; position: relative; overflow: hidden; }
+        .owner-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--yellow-primary), transparent); }
+        .owner-avatar { width: 60px; height: 60px; background: linear-gradient(135deg, var(--yellow-dark), var(--yellow-primary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 15px; }
+        .owner-name { font-family: 'Hoefler Text', serif; font-size: 24px; color: var(--yellow-primary); margin-bottom: 5px; }
+        .owner-title { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-secondary); }
+
+        /* ===== VALUES SECTION ===== */
+        .values-section { padding: 120px 50px; background: var(--bg-secondary); position: relative; }
+        .values-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--yellow-primary), transparent); }
+        .section-header { text-align: center; margin-bottom: 70px; }
+        .section-eyebrow { font-size: 11px; letter-spacing: 5px; text-transform: uppercase; color: var(--yellow-primary); margin-bottom: 15px; display: block; }
+        .section-title { font-family: 'Hoefler Text', serif; font-size: 46px; font-weight: 400; margin-bottom: 20px; }
+        .section-title span { color: var(--yellow-primary); font-style: italic; }
+        .section-line { display: flex; align-items: center; justify-content: center; gap: 15px; }
+        .section-line::before, .section-line::after { content: ''; width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--yellow-primary)); }
+        .section-line::after { background: linear-gradient(90deg, var(--gold), transparent); }
+        .section-line-diamond { width: 6px; height: 6px; background: var(--gold); transform: rotate(45deg); }
+        .values-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; max-width: 1100px; margin: 0 auto; }
+        .value-card { background: var(--glass-bg); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); padding: 45px 25px; text-align: center; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+        .value-card::before { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); transform: scaleX(0); transition: transform 0.5s ease; }
+        .value-card:hover::before { transform: scaleX(1); }
+        .value-card:hover { transform: translateY(-10px); border-color: rgba(201, 169, 98, 0.35); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4); }
+        .value-icon { width: 56px; height: 56px; margin: 0 auto 22px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(201, 169, 98, 0.25); color: var(--gold); transition: all 0.3s ease; }
+        .value-card:hover .value-icon { background: rgba(201, 169, 98, 0.1); border-color: var(--gold); }
+        .value-title { font-family: 'Playfair Display', serif; font-size: 20px; margin-bottom: 14px; color: var(--gold-light); }
+        .value-text { font-size: 15px; color: var(--text-secondary); line-height: 1.8; }
+
+       /* ===== CTA SECTION ===== */
+.cta-section {
+    padding: 100px 50px;
+    background: var(--bg-secondary);
+    text-align: center;
+    position: relative;
+}
+
+/* línea superior elegante */
+.cta-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+/* contenedor glass */
+.cta-glass {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid rgba(233,156,50,0.35);
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 70px 60px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        0 20px 60px rgba(0,0,0,0.35),
+        0 0 40px rgba(233,156,50,0.08);
+}
+
+/* brillo superior */
+.cta-glass::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #e99c32, transparent);
+}
+
+/* título */
+.cta-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 40px;
+    margin-bottom: 18px;
+    letter-spacing: 1px;
+}
+
+.cta-title span {
+    color: #e99c32;
+}
+
+/* texto */
+.cta-text {
+    color: var(--text-secondary);
+    font-size: 18px;
+    margin-bottom: 45px;
+    line-height: 1.8;
+}
+
+/* botón */
+.cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 45px;
+    background: linear-gradient(135deg, var(--gold-dark), #e99c32);
+    color: #e99c32;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid rgba(233,156,50,0.6);
+    transition: all 0.35s ease;
+}
+
+/* hover más visible */
+.cta-btn:hover {
+    background: linear-gradient(135deg, #e99c32, var(--gold-light));
+    transform: translateY(-6px) scale(1.05);
+    box-shadow:
+        0 15px 40px rgba(233,156,50,0.6),
+        0 0 20px rgba(233,156,50,0.4);
+}
+
+        /* ===== FOOTER ===== */
+        footer { background: var(--bg-secondary); padding: 80px 50px 40px; position: relative; }
+        footer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+        .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; }
+        .footer-brand .logo { margin-bottom: 20px; }
+        .footer-brand p { color: var(--text-secondary); font-size: 15px; line-height: 1.9; }
+        .footer-title { font-family: 'Playfair Display', serif; font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 25px; position: relative; padding-bottom: 12px; }
+        .footer-title::after { content: ''; position: absolute; bottom: 0; left: 0; width: 30px; height: 1px; background: var(--gold); }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a { color: var(--text-secondary); text-decoration: none; font-size: 15px; transition: all 0.3s ease; }
+        .footer-links a:hover { color: var(--gold); padding-left: 5px; }
+        .social-links { display: flex; gap: 12px; }
+        .social-link { width: 44px; height: 44px; background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: center; color: var(--text-secondary); text-decoration: none; transition: all 0.3s ease; }
+        .social-link:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-4px); box-shadow: 0 8px 20px rgba(201, 169, 98, 0.2); background: rgba(201, 169, 98, 0.1); }
+
+        /* ===== CART MODAL ===== */
+        .cart-modal { display: none; position: fixed; top: 0; right: 0; width: 100%; max-width: 420px; height: 100vh; background: rgba(26, 22, 20, 0.95); backdrop-filter: blur(30px); border-left: 1px solid var(--glass-border); z-index: 2000; padding: 30px; overflow-y: auto; box-shadow: -20px 0 60px rgba(0, 0, 0, 0.6); }
+        .cart-modal.active { display: block; animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--glass-border); }
+        .cart-title { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--gold); }
+        .cart-close { background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-secondary); font-size: 20px; cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; }
+        .cart-close:hover { border-color: var(--gold); color: var(--gold); }
+        .cart-items { margin-bottom: 30px; }
+        .cart-item { display: flex; gap: 15px; padding: 15px 0; border-bottom: 1px solid rgba(201, 169, 98, 0.08); }
+        .cart-item img { width: 70px; height: 70px; object-fit: contain; background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 8px; }
+        .cart-item-info { flex: 1; }
+        .cart-item-name { font-family: 'Playfair Display', serif; font-size: 16px; margin-bottom: 5px; }
+        .cart-item-price { color: var(--gold); font-size: 14px; }
+        .cart-item-quantity { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+        .qty-btn { width: 28px; height: 28px; background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--gold); cursor: pointer; font-size: 16px; }
+        .qty-btn:hover { background: rgba(201, 169, 98, 0.2); border-color: var(--gold); }
+        .cart-item-remove { background: none; border: none; color: #e74c3c; cursor: pointer; font-size: 12px; text-decoration: underline; margin-top: 5px; }
+        .cart-item-remove:hover { color: #ff6b6b; }
+        .cart-empty { text-align: center; padding: 60px 20px; color: var(--text-secondary); font-size: 18px; font-style: italic; }
+        .cart-total { padding: 20px 0; border-top: 1px solid var(--glass-border); margin-top: 20px; }
+        .cart-total-row { display: flex; justify-content: space-between; font-family: 'Playfair Display', serif; font-size: 20px; margin-bottom: 20px; }
+        .cart-total-value { color: var(--gold); }
+        .cart-checkout-btn { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--gold-dark), var(--gold)); border: none; color: var(--bg-primary); font-family: 'Cormorant Garamond', serif; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; }
+        .cart-checkout-btn:hover { background: linear-gradient(135deg, var(--gold), var(--gold-light)); box-shadow: 0 5px 20px rgba(201, 169, 98, 0.4); }
+        .cart-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); z-index: 1999; }
+        .cart-overlay.active { display: block; }
+        .footer-bottom { max-width: 1200px; margin: 60px auto 0; padding-top: 30px; border-top: 1px solid rgba(201, 169, 98, 0.08); text-align: center; color: var(--text-secondary); font-size: 13px; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .about-grid { grid-template-columns: 1fr; gap: 50px; }
+            .values-grid { grid-template-columns: repeat(2, 1fr); }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-content { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            header { padding: 15px 20px; position: relative; z-index: 999; }
+            
+            /* Reset nav para móvil */
+            nav { position: static; }
+            
+            header.scrolled { padding: 12px 20px; }
+            
+            /* Ocultar nav-links de escritorio */
+            .nav-links { 
+                display: none; 
+            }
+
+            /* Mostrar menú móvil cuando está activo */
+            .nav-links.active {
+                display: flex;
+                position: fixed;
+                top: 60px;
+                left: 0;
+                right: 0;
+                width: 100%;
+                transform: none;
+                background: rgba(66, 56, 54, 0.98);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 0;
+                gap: 0;
+                border-bottom: 2px solid var(--yellow-primary);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+                z-index: 999;
+                max-height: calc(100vh - 60px);
+                overflow-y: auto;
+                animation: slideDown 0.3s ease-out;
+            }
+
+            @keyframes slideDown {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            /* Items del menú móvil */
+            .nav-links.active li {
+                width: 100%;
+                border-bottom: 1px solid rgba(233, 156, 50, 0.1);
+                list-style: none;
+            }
+
+            .nav-links.active li:last-child {
+                border-bottom: none;
+            }
+
+            .nav-links.active a {
+                display: block;
+                padding: 16px 20px;
+                font-size: 14px;
+                letter-spacing: 3px;
+                text-align: center;
+                width: 100%;
+                color: var(--text-primary);
+                text-decoration: none;
+                transition: all 0.3s ease;
+            }
+
+            .nav-links.active a::before {
+                display: none;
+            }
+
+            .nav-links.active a:hover, 
+            .nav-links.active a.active {
+                background: rgba(233, 156, 50, 0.1);
+                color: var(--yellow-primary);
+            }
+
+            /* Panel link en móvil */
+            .nav-links.active a.panel-link {
+                margin: 10px 15px 15px;
+                border: 1px solid var(--yellow-primary);
+                padding: 12px !important;
+                background: rgba(233, 156, 50, 0.15);
+                border-radius: 4px;
+                display: block;
+            }
+
+            /* Botón hamburguesa visible en móvil */
+            .menu-toggle { 
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 5px;
+                cursor: pointer;
+                padding: 10px;
+                width: 44px;
+                height: 44px;
+                background: var(--glass-bg);
+                backdrop-filter: blur(10px);
+                border: 1px solid var(--glass-border);
+                border-radius: 4px;
+                transition: all 0.3s ease;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .menu-toggle:active {
+                background: rgba(233, 156, 50, 0.2);
+                transform: scale(0.95);
+            }
+
+            .menu-toggle span {
+                width: 22px; 
+                height: 2px;
+                background: var(--yellow-primary);
+                transition: all 0.3s ease;
+                display: block;
+            }
+
+            .menu-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+            .menu-toggle.active span:nth-child(2) { opacity: 0; }
+            .menu-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+            
+            .hero { padding: 150px 20px 80px; }
+            .hero-title { font-size: 38px; }
+            .about-section, .values-section, .cta-section { padding: 80px 20px; }
+            .values-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-content { grid-template-columns: 1fr; text-align: center; }
+            .footer-title::after { left: 50%; transform: translateX(-50%); }
+            .social-links { justify-content: center; }
+            .cta-glass { padding: 40px 25px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particles -->
+    <div class="particles-container" id="particles"></div>
+
+    <!-- Header -->
+    <header id="header">
+        <nav>
+            <a href="index.html" class="logo" id="adminLogo">
+                <img src="ezentia.png" alt="EZENTIA" class="logo-img">
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="productos.html">Productos</a></li>
+                <li><a href="nosotros.html" class="active">Nosotros</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+            </ul>
+            <div class="nav-right">
+                <div class="cart-icon" onclick="openCart()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                    <span class="cart-count" id="cartCount">0</span>
+                </div>
+            </div>
+            <div class="menu-toggle" id="menuToggle">
+                <span></span><span></span><span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="floating-element" style="top: 15%; left: 8%; animation-duration: 8s;"><div class="float-diamond"></div></div>
+        <div class="floating-element" style="top: 60%; right: 10%; animation-duration: 10s; animation-delay: -3s;"><div class="float-square"></div></div>
+        <div class="floating-element" style="bottom: 20%; left: 15%; animation-duration: 7s; animation-delay: -5s;"><div class="float-cross"></div></div>
+
+        <div class="hero-content">
+            <span class="hero-eyebrow">Nuestra Esencia</span>
+            <h1 class="hero-title">Conoce <span>EZENTIA</span></h1>
+            <p class="hero-subtitle">Una historia de pasión por la perfumería de lujo</p>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">10+</div>
+                <div class="stat-label">Fragancias Exclusivas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Originales Garantizadas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">20+</div>
+                <div class="stat-label">Clientes Satisfechos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">5+</div>
+                <div class="stat-label">Marcas reconocidas</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section">
+        <div class="about-grid">
+            <div class="about-image">
+                <div class="about-image-wrapper">
+                    <div class="about-image-inner">
+                         <img src="ezentiaBrown.png" 
+                         alt="EZENTIA Perfumería Luxury"
+                         class="about-icon"
+                         style="width: 360px; height: 280px; object-fit:contain;">
+                    </div>
+                    <div class="about-image-quote">
+                        <p>"Cada fragancia es una obra de arte que habla sin palabras"</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="about-content">
+                <span class="about-eyebrow">Quiénes Somos</span>
+                <h2>EZENTIA <span>Perfumería Luxury</span></h2>
+                <p>
+                    Somos un espacio dedicado a celebrar el arte 
+                    de la perfumería. Nuestro compromiso es 
+                    ofrecer 100% originales que acompañen tu esencia
+                    y realcen tu estilo. Te invitamos adescubrir aromas
+                    que inspiran seduecn y cuentan historias, por que creemos
+                    que un buen perfume no solo se lleva, se vive.
+
+                </p>
+                <p>
+                    Nuestra selección incluye
+                    marcas reconocidas, garantizando autenticidad en cada producto. Elaboradas con materias 
+                    primas cuidadosamente seleccionadas y procesos controlados, lo que se traduce en aromas
+                    de alta calidad, durabilidad y una evolución adecuada del perfume sobre la piel.
+                </p>
+
+                <div class="owner-card">
+                    <div class="owner-avatar">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--bg-primary)" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+                    <h3 class="owner-name">Juan Esteban Bonilla</h3>
+                    <p class="owner-title">CEO</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="values-section">
+        <div class="section-header">
+            <span class="section-eyebrow">Lo que nos define</span>
+            <h2 class="section-title">Nuestros <span>Valores</span></h2>
+            <div class="section-line"><div class="section-line-diamond"></div></div>
+        </div>
+
+        <div class="values-grid">
+            <div class="value-card">
+                <div class="value-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                </div>
+                <h3 class="value-title">Originalidad</h3>
+                <p class="value-text">Solo vendemos fragancias 100% originales de casas reconocidas mundialmente. Cero imitaciones.</p>
+            </div>
+
+            <div class="value-card">
+                <div class="value-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </div>
+                <h3 class="value-title">Calidad</h3>
+                <p class="value-text">Seleccionamos meticulosamente los mejores aromas para garantizar una experiencia sensorial única.</p>
+            </div>
+
+            <div class="value-card">
+                <div class="value-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <h3 class="value-title">Confianza</h3>
+                <p class="value-text">Construimos relaciones duraderas con nuestros clientes basadas en transparencia y honestidad.</p>
+            </div>
+
+            <div class="value-card">
+                <div class="value-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </div>
+                <h3 class="value-title">Pasión</h3>
+                <p class="value-text">Amamos profundamente la perfumería y compartimos esa pasión en cada interacción contigo.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-glass">
+            <span class="section-eyebrow">Únete a Nosotros</span>
+            <h2 class="cta-title">Descubre tu <span>Fragancia</span></h2>
+            <p class="cta-text">Explora nuestra colección exclusiva y encuentra el aroma que mejor refleja tu esencia única.</p>
+            <a href="productos.html" class="cta-btn">Ver Colección →</a>
+        </div>
+    </section>
+
+    <!-- Cart Overlay -->
+    <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+
+    <!-- Cart Modal -->
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-header">
+            <h2 class="cart-title">Tu Carrito</h2>
+            <button class="cart-close" onclick="closeCart()">&times;</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <div class="cart-empty">Tu carrito está vacío</div>
+        </div>
+        <div class="cart-total" id="cartTotalSection" style="display:none">
+            <div class="cart-total-row">
+                <span>Total:</span>
+                <span class="cart-total-value" id="cartTotalValue">$0</span>
+            </div>
+            <button class="cart-checkout-btn" onclick="checkout()">Comprar por WhatsApp</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="index.html" class="logo">
+                    <img src="ezentia.png" alt="EZENTIA" class="logo-img">
+                </a>
+                <p>EZENTIA - Tu destino para fragancias de lujo originales.</p>
+                <div class="social-links" style="margin-top: 25px;">
+                    <a href="https://www.instagram.com/ezentia.pl?igsh=bWlxZHVqcjRuajFq" class="social-link" target="_blank">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    </a>
+                    <a href="https://wa.me/573016952398" class="social-link" target="_blank">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    </a>
+                    <a href="mailto:info@ezentia.com" class="social-link" target="_blank">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.104 10-8.104v11.817h-20z"/></svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4 class="footer-title">Navegación</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="productos.html">Productos</a></li>
+                    <li><a href="nosotros.html">Nosotros</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4 class="footer-title">Contacto</h4>
+                <ul class="footer-links">
+                    <li><a href="tel:+573016952398">+57 301 695 2398</a></li>
+                    <li><a href="mailto:info@ezentia.com">info@ezentia.com</a></li>
+                    <li style="color: var(--text-secondary); font-size: 15px;">El Santuario, Antioquia</li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4 class="footer-title">Marcas</h4>
+                <ul class="footer-links">
+                    <li><a href="productos.html">Lattafa</a></li>
+                    <li><a href="productos.html">Nautica</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2024 EZENTIA Perfumería Luxury. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // ===== CART =====
+        var cart = JSON.parse(localStorage.getItem('ezentia_cart')) || [];
+        updateCartCount();
+
+        function updateCartCount() {
+            var count = cart.reduce(function(sum, item) { return sum + item.quantity; }, 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+
+        function openCart() {
+            document.getElementById('cartModal').classList.add('active');
+            document.getElementById('cartOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            renderCartItems();
+        }
+
+        function closeCart() {
+            document.getElementById('cartModal').classList.remove('active');
+            document.getElementById('cartOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function renderCartItems() {
+            var container = document.getElementById('cartItems');
+            var totalSection = document.getElementById('cartTotalSection');
+            
+            if (cart.length === 0) {
+                container.innerHTML = '<div class="cart-empty">Tu carrito está vacío</div>';
+                totalSection.style.display = 'none';
+                return;
+            }
+
+            totalSection.style.display = 'block';
+            var total = 0;
+
+            container.innerHTML = cart.map(function(item, index) {
+                total = total + item.price * item.quantity;
+                return '<div class="cart-item"><img src="' + item.image + '" alt="' + item.name + '"><div class="cart-item-info"><h4 class="cart-item-name">' + item.name + '</h4><p class="cart-item-price">$' + item.price.toLocaleString() + '</p><div class="cart-item-quantity"><button class="qty-btn" onclick="updateQuantity(' + index + ', -1)">-</button><span>' + item.quantity + '</span><button class="qty-btn" onclick="updateQuantity(' + index + ', 1)">+</button></div><button class="cart-item-remove" onclick="removeFromCart(' + index + ')">Eliminar</button></div></div>';
+            }).join('');
+
+            document.getElementById('cartTotalValue').textContent = '$' + total.toLocaleString();
+        }
+
+        function updateQuantity(index, change) {
+            cart[index].quantity = cart[index].quantity + change;
+            if (cart[index].quantity <= 0) {
+                cart.splice(index, 1);
+            }
+            localStorage.setItem('ezentia_cart', JSON.stringify(cart));
+            updateCartCount();
+            renderCartItems();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            localStorage.setItem('ezentia_cart', JSON.stringify(cart));
+            updateCartCount();
+            renderCartItems();
+        }
+
+        function checkout() {
+            if (cart.length === 0) return;
+            var message = 'Hola, me gustaría comprar los siguientes productos:%0A';
+            var total = 0;
+            cart.forEach(function(item) {
+                message = message + '- ' + item.name + ' x' + item.quantity + ': $' + (item.price * item.quantity).toLocaleString() + '%0A';
+                total = total + item.price * item.quantity;
+            });
+            message = message + '%0ATotal: $' + total.toLocaleString();
+            window.open('https://wa.me/573016952398?text=' + message, '_blank');
+        }
+
+        // ===== MOBILE MENU =====
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.getElementById('navLinks').classList.toggle('active');
+            this.classList.toggle('active');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const nav = document.getElementById('navLinks');
+            const toggle = document.getElementById('menuToggle');
+            if (!nav.contains(e.target) && !toggle.contains(e.target)) {
+                nav.classList.remove('active');
+                toggle.classList.remove('active');
+            }
+        });
+
+        // ===== PARTICLES =====
+        function createParticles() {
+            var container = document.getElementById('particles');
+            for (var i = 0; i < 15; i++) {
+                var p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.animationDuration = (Math.random() * 15 + 10) + 's';
+                p.style.animationDelay = (Math.random() * 15) + 's';
+                p.style.width = (Math.random() * 3 + 1) + 'px';
+                p.style.height = p.style.width;
+                container.appendChild(p);
+            }
+        }
+        createParticles();
+
+        // ===== HEADER SCROLL =====
+        window.addEventListener('scroll', function() {
+            document.getElementById('header').classList.toggle('scrolled', window.scrollY > 80);
+        });
+
+        // ===== SCROLL ANIMATIONS =====
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.value-card, .stat-card').forEach(function(el, i) {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.7s cubic-bezier(0.4, 0, 0.2, 1) ' + (i * 0.1) + 's';
+            observer.observe(el);
+        });
+
+        // ===== ADMIN ACCESS (5 CLICKS) =====
+        var clickCount = 0;
+        var clickTimer = null;
+        document.getElementById('adminLogo').addEventListener('click', function(e) {
+            e.preventDefault();
+            clickCount++;
+            if (clickTimer) clearTimeout(clickTimer);
+            clickTimer = setTimeout(function() { clickCount = 0; }, 1000);
+            if (clickCount >= 5) {
+                clickCount = 0;
+                window.location.href = 'admin.html';
+            }
+        });
+        
+        // Agregar link de Panel al navbar si hay sesión de admin
+        if (localStorage.getItem('ezentia_admin_session')) {
+            const navLinks = document.getElementById('navLinks');
+            if (navLinks) {
+                const panelLink = document.createElement('li');
+                panelLink.innerHTML = '<a href="admin.html" class="panel-link">Panel</a>';
+                navLinks.appendChild(panelLink);
+            }
+        }
+    </script>
+</body>
+</html>

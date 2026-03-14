@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EZENTIA - Panel de Administración</title>
+    <link rel="icon" type="image/png" href="ezentia.png">
+
+    <style>
+        @font-face {
+            font-family: 'Hoefler Text';
+            src: local('Hoefler Text'), local('HoeflerText');
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        @font-face {
+            font-family: 'Hoefler Text';
+            src: local('Hoefler Text Italic'), local('HoeflerText-Italic');
+            font-weight: normal;
+            font-style: italic;
+        }
+
+        :root {
+            --brown-dark: #423836;
+            --brown-rgb: 66, 56, 54;
+            --gray-light: #c1bfbf;
+            --gray-medium: #706f6f;
+            --yellow-primary: #e99c32;
+            --yellow-light: #f5b85a;
+            --yellow-dark: #c47d20;
+            
+            --bg-primary: #423836;
+            --bg-secondary: #2a2423;
+            --text-primary: #c1bfbf;
+            --text-secondary: #706f6f;
+            --accent: #e99c32;
+            --white: #ffffff;
+            
+            --glass-bg: rgba(66, 56, 54, 0.25);
+            --glass-bg-solid: rgba(66, 56, 54, 0.85);
+            --glass-border: rgba(233, 156, 50, 0.25);
+            --glass-blur: blur(20px);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            
+            --primary: #4a3728;
+            --secondary: #8b6914;
+            --bg-dark: #1a1512;
+            --bg-card: #2a231d;
+            --text-light: #f5f0e8;
+            --text-muted: #a89a8a;
+            --danger: #c0392b;
+            --success: #27ae60;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Hoefler Text', 'Times New Roman', serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(to bottom, var(--yellow-dark), var(--yellow-primary)); border-radius: 10px; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes borderGlow { 0%, 100% { border-color: rgba(233, 156, 50, 0.2); } 50% { border-color: rgba(233, 156, 50, 0.6); } }
+
+        /* fondo con imagen de la pagina */
+        .background-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('ezentia.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0.15;
+            z-index: -2;
+        }
+
+        .background-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(66, 56, 54, 0.9) 0%, rgba(42, 36, 35, 0.95) 100%);
+            z-index: -1;
+        }
+
+        /* header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 18px 50px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            height: 42px;
+            width: auto;
+            filter: drop-shadow(0 0 10px rgba(233, 156, 50, 0.3));
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover .logo-img { 
+            filter: drop-shadow(0 0 20px rgba(233, 156, 50, 0.6));
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-left: auto;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 13px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            position: relative;
+            transition: all 0.3s ease;
+            padding: 5px 0;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--yellow-primary), transparent);
+            transition: width 0.4s ease;
+        }
+
+        .nav-links a:hover, .nav-links a.active { 
+            color: var(--yellow-primary); 
+            text-shadow: 0 0 10px rgba(233, 156, 50, 0.3);
+        }
+        
+        .nav-links a:hover::before, .nav-links a.active::before { width: 100%; }
+
+        .nav-links a.panel-link {
+            color: var(--yellow-primary);
+            font-weight: bold;
+            border: 1px solid var(--yellow-primary);
+            padding: 8px 16px;
+            background: rgba(233, 156, 50, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a.panel-link::before { display: none; }
+
+        .nav-links a.panel-link:hover {
+            background: var(--yellow-primary);
+            color: var(--bg-primary);
+            text-shadow: none;
+        }
+
+        .logout-btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-family: 'Hoefler Text', serif;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 5px;
+        }
+
+        .logout-btn:hover {
+            background: rgba(192, 57, 43, 0.2);
+            border-color: var(--danger);
+            color: #e74c3c;
+            transform: translateY(-2px);
+        }
+
+        .logout-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* contenido principal */
+        .main-content {
+            padding-top: 100px;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+
+        .page-title {
+            font-family: 'Hoefler Text', serif;
+            font-size: 48px;
+            font-weight: normal;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--yellow-light) 50%, var(--text-primary) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 8s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            font-style: italic;
+            letter-spacing: 1px;
+        }
+
+        /* paneles */
+        .panel {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .panel.active { display: block; }
+
+        /* tabs */
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border-radius: 10px 10px 0 0;
+            padding: 0 1rem;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 1.2rem 2rem;
+            cursor: pointer;
+            font-size: 13px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            font-family: 'Hoefler Text', serif;
+            transition: all 0.4s ease;
+            position: relative;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -1px;
+        }
+
+        .tab-btn:hover {
+            color: var(--yellow-primary);
+            background: rgba(233, 156, 50, 0.05);
+        }
+
+        .tab-btn.active {
+            color: var(--yellow-primary);
+            border-bottom-color: var(--yellow-primary);
+            background: rgba(233, 156, 50, 0.1);
+        }
+
+        /* tarjetas de vidrio */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--glass-shadow);
+            animation: borderGlow 4s ease-in-out infinite;
+            transition: all 0.4s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(233, 156, 50, 0.4);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .glass-card h2 {
+            color: var(--yellow-primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(233, 156, 50, 0.2);
+            font-size: 1.5rem;
+            font-family: 'Hoefler Text', serif;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* estadisticas */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            padding: 2.5rem 2rem;
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--yellow-primary), transparent);
+            transform: scaleX(0);
+            transition: transform 0.5s ease;
+        }
+
+        .stat-card:hover::before { transform: scaleX(1); }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(233, 156, 50, 0.4);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(233, 156, 50, 0.3);
+            border-radius: 50%;
+            color: var(--yellow-primary);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover .stat-icon {
+            background: rgba(233, 156, 50, 0.1);
+            border-color: var(--yellow-primary);
+            transform: scale(1.1);
+        }
+
+        .stat-value {
+            font-size: 3rem;
+            color: var(--yellow-primary);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            font-family: 'Hoefler Text', serif;
+            text-shadow: 0 0 20px rgba(233, 156, 50, 0.3);
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+        }
+
+        /* formularios */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--yellow-primary);
+            font-size: 11px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            font-weight: normal;
+        }
+
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            background: rgba(193, 191, 191, 0.05);
+            border: 1px solid rgba(233, 156, 50, 0.2);
+            color: var(--text-light);
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: 'Hoefler Text', serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, 
+        .form-group select:focus, 
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--yellow-primary);
+            background: rgba(233, 156, 50, 0.08);
+            box-shadow: 0 0 25px rgba(233, 156, 50, 0.15);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(193, 191, 191, 0.4);
+        }
+
+        /* Textarea para descripción */
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 1rem;
+            background: rgba(193, 191, 191, 0.05);
+            border: 2px dashed rgba(233, 156, 50, 0.3);
+            border-radius: 8px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .file-upload-label:hover {
+            border-color: var(--yellow-primary);
+            color: var(--yellow-primary);
+            background: rgba(233, 156, 50, 0.08);
+        }
+
+        /* botones */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 32px;
+            font-family: 'Hoefler Text', serif;
+            font-size: 12px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--yellow-dark), var(--yellow-primary));
+            color: var(--bg-primary);
+            box-shadow: 0 4px 20px rgba(233, 156, 50, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--yellow-primary), var(--yellow-light));
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(233, 156, 50, 0.5);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #a93226, #c0392b);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #c0392b, #e74c3c);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(192, 57, 43, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #1e8449, #27ae60);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(39, 174, 96, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--yellow-primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(233, 156, 50, 0.1);
+            border-color: var(--yellow-primary);
+            transform: translateY(-3px);
+        }
+
+        /* tablas */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1.2rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(233, 156, 50, 0.1);
+        }
+
+        th {
+            background: rgba(74, 55, 40, 0.6);
+            color: var(--yellow-primary);
+            font-size: 11px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            font-weight: normal;
+            font-family: 'Hoefler Text', serif;
+        }
+
+        tr:hover {
+            background: rgba(139, 105, 20, 0.1);
+        }
+
+        .product-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .product-image:hover {
+            border-color: var(--yellow-primary);
+            transform: scale(1.1);
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 0.5rem;
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            font-family: 'Hoefler Text', serif;
+        }
+
+        .edit-btn {
+            background: var(--secondary);
+            color: var(--bg-dark);
+        }
+
+        .edit-btn:hover {
+            background: var(--yellow-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(233, 156, 50, 0.3);
+        }
+
+        .delete-btn {
+            background: var(--danger);
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #e74c3c;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(192, 57, 43, 0.3);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+            color: var(--text-muted);
+            font-style: italic;
+            font-size: 16px;
+        }
+
+        /* login */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-box {
+            background: var(--glass-bg-solid);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            padding: 4rem;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: var(--glass-shadow);
+            animation: fadeInUp 0.6s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--yellow-primary), transparent);
+        }
+
+        .login-logo {
+            max-width: 200px;
+            margin-bottom: 2.5rem;
+            filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.5));
+            transition: all 0.3s ease;
+        }
+
+        .login-logo:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 15px 40px rgba(233, 156, 50, 0.3));
+        }
+
+        .login-title {
+            font-family: 'Hoefler Text', serif;
+            font-size: 32px;
+            margin-bottom: 0.5rem;
+            color: var(--yellow-primary);
+            letter-spacing: 2px;
+        }
+
+        .login-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            font-size: 15px;
+            font-style: italic;
+        }
+
+        .login-form .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        /* responsive */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            padding: 10px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 5px;
+        }
+
+        .menu-toggle span {
+            width: 24px;
+            height: 1px;
+            background: var(--yellow-primary);
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        @media (max-width: 1024px) {
+            .nav-links {
+                position: static;
+                transform: none;
+                gap: 25px;
+            }
+            
+            .page-title { font-size: 38px; }
+        }
+
+        @media (max-width: 768px) {
+            header { padding: 15px 20px; position: relative; z-index: 999; }
+            
+            /* Reset nav para móvil */
+            nav { position: static; }
+            
+            .nav-links { 
+                display: none; 
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--glass-bg-solid);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 25px;
+                gap: 20px;
+                border-bottom: 1px solid var(--glass-border);
+                transform: none;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                z-index: 1000;
+            }
+            
+            .nav-links.active { display: flex; }
+            
+            .menu-toggle { display: flex; }
+            
+            .menu-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+            .menu-toggle.active span:nth-child(2) { opacity: 0; }
+            .menu-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+            
+            .page-title { font-size: 32px; }
+            .form-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .tabs { overflow-x: auto; padding: 0; }
+            .tab-btn { padding: 1rem 1.5rem; white-space: nowrap; }
+            .login-box { padding: 2.5rem 1.5rem; }
+        }
+
+        .hidden { display: none !important; }
+
+        /* indicador de estado */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .status-pendiente {
+            background: rgba(233, 156, 50, 0.15);
+            color: var(--yellow-primary);
+            border: 1px solid rgba(233, 156, 50, 0.3);
+        }
+
+        .status-completado {
+            background: rgba(39, 174, 96, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(39, 174, 96, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- fondo -->
+    <div class="background-layer"></div>
+    <div class="background-overlay"></div>
+
+    <!-- login -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-box">
+            <img src="ezentiaWhite.png" alt="EZENTIA" class="login-logo">
+            <h1 class="login-title">Panel Administrativo</h1>
+            <p class="login-subtitle">Ingresa la contraseña para continuar</p>
+            <form class="login-form" onsubmit="login(event)">
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="password" required placeholder="Ingresa la contraseña">
+                                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    Ingresar al Sistema
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- panel admin -->
+    <div id="adminPanel" class="hidden">
+        <header>
+            <nav>
+                <a href="index.html" class="logo">
+                    <img src="ezentia.png" alt="EZENTIA" class="logo-img">
+                </a>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="productos.html">Productos</a></li>
+                    <li><a href="nosotros.html">Nosotros</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                    <li><a href="admin.html" class="panel-link active">Panel</a></li>
+                </ul>
+                <div class="nav-right">
+                    <button class="logout-btn" onclick="logout()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        Cerrar Sesión
+                    </button>
+                </div>
+                <div class="menu-toggle" id="menuToggle" onclick="toggleMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </header>
+
+        <div class="main-content">
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="page-title">Panel de Control</h1>
+                    <p class="page-subtitle">Gestiona tus productos, ventas e inventario desde un solo lugar</p>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="showTab('dashboard')">Dashboard</button>
+                    <button class="tab-btn" onclick="showTab('products')">Productos</button>
+                    <button class="tab-btn" onclick="showTab('sales')">Ventas</button>
+                </div>
+
+                <!-- dashboard -->
+                <div id="dashboard" class="panel active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                                    <path d="M16 10a4 4 0 0 1-8 0"></path>
+                                </svg>
+                            </div>
+                            <div class="stat-value" id="totalSales">0</div>
+                            <div class="stat-label">Ventas Totales</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                </svg>
+                            </div>
+                            <div class="stat-value" id="totalRevenue">$0</div>
+                            <div class="stat-label">Ingresos Totales</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                </svg>
+                            </div>
+                            <div class="stat-value" id="totalProducts">0</div>
+                            <div class="stat-label">Productos en Stock</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                                </svg>
+                            </div>
+                            <div class="stat-value" id="inventoryValue">$0</div>
+                            <div class="stat-label">Valor del Inventario</div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card">
+                        <h2>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity: 0.8;">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                            Ventas Recientes
+                        </h2>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Cliente</th>
+                                        <th>Total</th>
+                                        <th>Fecha</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="salesTableBody">
+                                    <tr><td colspan="5" class="empty-state">No hay ventas registradas</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- productos -->
+                <div id="products" class="panel">
+                    <div class="glass-card">
+                        <h2>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity: 0.8;">
+                                <path d="M12 5v14M5 12h14"></path>
+                            </svg>
+                            Agregar o Editar Producto
+                        </h2>
+                        <form id="productForm" onsubmit="saveProduct(event)">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Nombre del Perfume</label>
+                                    <input type="text" id="productName" required placeholder="Ej: Santal 33">
+                                </div>
+                                <div class="form-group">
+                                    <label>Marca</label>
+                                    <input type="text" id="productBrand" required placeholder="Ej: Le Labo">
+                                </div>
+                                <div class="form-group">
+                                    <label>Categoría</label>
+                                    <select id="productCategory">
+                                        <option value="hombre">Hombre</option>
+                                        <option value="mujer">Mujer</option>
+                                        <option value="unisex">Unisex</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Precio</label>
+                                    <input type="number" id="productPrice" required min="0" step="0.01" placeholder="0.00">
+                                </div>
+                                <div class="form-group">
+                                    <label>Cantidad en Stock</label>
+                                    <input type="number" id="productStock" required min="0" placeholder="0">
+                                </div>
+                                <div class="form-group">
+                                    <label>Imagen del Producto</label>
+                                    <input type="url" id="productImage" placeholder="https://ejemplo.com/imagen.jpg">
+                                    <div class="file-upload" style="margin-top: 0.5rem;">
+                                        <input type="file" id="productImageFile" accept="image/*" onchange="handleImageUpload(this)">
+                                        <label for="productImageFile" class="file-upload-label">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                                <polyline points="17 8 12 3 7 8"></polyline>
+                                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                                            </svg>
+                                            Subir imagen desde dispositivo
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Presentación</label>
+                                    <input type="text" id="productPresentation" placeholder="Ej: 100ml">
+                                </div>
+                                <div class="form-group">
+                                    <label>Notas Olfativas</label>
+                                    <input type="text" id="productNotes" placeholder="Ej: Floral, Amaderado, Dulce">
+                                </div>
+                                <div class="form-group">
+                                    <label>Sillage</label>
+                                    <select id="productSillage">
+                                        <option value="Intenso">Intenso</option>
+                                        <option value="Moderado">Moderado</option>
+                                        <option value="Suave">Suave</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Estado del Producto</label>
+                                    <select id="productStatus">
+                                        <option value="normal">Normal</option>
+                                        <option value="nuevo">Nuevo</option>
+                                        <option value="bestseller">Más Vendido</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Campo de descripción - Fila completa -->
+                            <div class="form-group" style="margin-top: 1.5rem;">
+                                <label>Descripción del Producto</label>
+                                <textarea id="productDesc" placeholder="Describe la fragancia, sus notas, carácter, ocasiones de uso..."></textarea>
+                            </div>
+                            <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                                <button type="submit" class="btn btn-primary">Guardar Producto</button>
+                                <button type="button" class="btn btn-secondary" onclick="clearForm()">Limpiar Formulario</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="glass-card">
+                        <h2>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity: 0.8;">
+                                <path d="M12 3v18M3 12h18"></path>
+                            </svg>
+                            Inventario de Productos
+                        </h2>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Imagen</th>
+                                        <th>Nombre</th>
+                                        <th>Marca</th>
+                                        <th>Categoría</th>
+                                        <th>Precio</th>
+                                        <th>Stock</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productsTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ventas -->
+                <div id="sales" class="panel">
+                    <div class="glass-card">
+                        <h2>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity: 0.8;">
+                                <circle cx="9" cy="21" r="1"></circle>
+                                <circle cx="20" cy="21" r="1"></circle>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                            </svg>
+                            Registrar Nueva Venta
+                        </h2>
+                        <form id="saleForm" onsubmit="saveSale(event)">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Nombre del Cliente</label>
+                                    <input type="text" id="clientName" required placeholder="Nombre completo">
+                                </div>
+                                <div class="form-group">
+                                    <label>Producto</label>
+                                    <select id="saleProduct" required></select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Cantidad</label>
+                                    <input type="number" id="saleQuantity" required min="1" value="1">
+                                </div>
+                                <div class="form-group">
+                                    <label>Total de la Venta</label>
+                                    <input type="number" id="saleTotal" required min="0" step="0.01" placeholder="0.00">
+                                </div>
+                                <div class="form-group">
+                                    <label>Estado de la Venta</label>
+                                    <select id="saleStatus">
+                                        <option value="pendiente">Pendiente</option>
+                                        <option value="completado">Completado</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-success" style="margin-top: 1.5rem;">Registrar Venta</button>
+                        </form>
+                    </div>
+
+                    <div class="glass-card">
+                        <h2>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity: 0.8;">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                            Historial de Ventas
+                        </h2>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Cliente</th>
+                                        <th>Producto</th>
+                                        <th>Cantidad</th>
+                                        <th>Total</th>
+                                        <th>Fecha</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="allSalesTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // CONFIGURACIÓN Y DATOS INICIALES
+        // ==========================================
+        
+        const ADMIN_PASSWORD = 'Bonilla67@';
+        let currentUser = localStorage.getItem('ezentia_admin_session');
+
+        // Productos por defecto - se cargan SOLO si no hay datos en localStorage
+        const defaultProducts = [
+            { 
+                id: 1, 
+                name: "Santal 33", 
+                brand: "Le Labo", 
+                cat: "unisex", 
+                price: 180000, 
+                stock: 5, 
+                image: "leau.png", 
+                presentation: "50ml", 
+                notes: "Sandalwood, Violet, Cedar", 
+                sillage: "Intenso", 
+                status: "bestseller",
+                desc: "Fragancia artesanal con notas de sándalo, violeta y cedro. Unisex y sofisticada."
+            },
+            { 
+                id: 2, 
+                name: "Black Orchid", 
+                brand: "Tom Ford", 
+                cat: "mujer", 
+                price: 150000, 
+                stock: 3, 
+                image: "blackout.png", 
+                presentation: "100ml", 
+                notes: "Truffle, Black Currant, Orchid", 
+                sillage: "Intenso", 
+                status: "normal",
+                desc: "Elegante y misteriosa con notas de trufa, grosella negra y orquídea."
+            },
+            { 
+                id: 3, 
+                name: "Santal Blanc", 
+                brand: "Chanel", 
+                cat: "unisex", 
+                price: 135000, 
+                stock: 4, 
+                image: "cloud.png", 
+                presentation: "100ml", 
+                notes: "White Sandalwood, Musk, Amber", 
+                sillage: "Moderado", 
+                status: "nuevo",
+                desc: "Fresca y luminosa con sándalo blanco, almizcle y ámbar."
+            },
+            { 
+                id: 4, 
+                name: "Nautica", 
+                brand: "Parfums de Marly", 
+                cat: "hombre", 
+                price: 195000, 
+                stock: 2, 
+                image: "nautica.png", 
+                presentation: "75ml", 
+                notes: "Sea Notes, Jasmine, Sandalwood", 
+                sillage: "Intenso", 
+                status: "normal",
+                desc: "Marina y fresca con notas oceánicas, jazmín y sándalo."
+            },
+            { 
+                id: 5, 
+                name: "Khamrah", 
+                brand: "Lattafa", 
+                cat: "unisex", 
+                price: 120000, 
+                stock: 8, 
+                image: "khamrah.png", 
+                presentation: "100ml", 
+                notes: "Cinnamon, Nutmeg, Amberwood", 
+                sillage: "Intenso", 
+                status: "bestseller",
+                desc: "Oriental especiada con canela, nuez moscada y madera de ámbar."
+            }
+        ];
+
+        // ==========================================
+        // INICIALIZACIÓN DE DATOS
+        // ==========================================
+        
+        // Cargar productos desde localStorage o usar defaults (solo primera vez)
+        let products = [];
+        const storedProducts = localStorage.getItem('ezentia_products');
+        
+        if (storedProducts) {
+            // Si hay datos guardados, usarlos
+            products = JSON.parse(storedProducts);
+        } else {
+            // Primera vez: usar defaults y guardar
+            products = JSON.parse(JSON.stringify(defaultProducts));
+            localStorage.setItem('ezentia_products', JSON.stringify(products));
+        }
+
+        // Cargar ventas desde localStorage (siempre preservar)
+        let sales = [];
+        const storedSales = localStorage.getItem('ezentia_sales');
+        
+        if (storedSales) {
+            sales = JSON.parse(storedSales);
+        }
+        // Si no hay ventas guardadas, iniciar vacío (no borrar nada)
+
+        // ==========================================
+        // FUNCIONES DE AUTENTICACIÓN
+        // ==========================================
+
+        if (currentUser) {
+            showAdminPanel();
+        }
+
+        function login(e) {
+            e.preventDefault();
+            const password = document.getElementById('password').value;
+
+            if (password === ADMIN_PASSWORD) {
+                localStorage.setItem('ezentia_admin_session', 'active');
+                currentUser = 'active';
+                showAdminPanel();
+            } else {
+                alert('Contraseña incorrecta. Intente nuevamente.');
+                document.getElementById('password').value = '';
+                document.getElementById('password').focus();
+            }
+        }
+
+        function logout() {
+            if (confirm('¿Está seguro de cerrar la sesión?')) {
+                localStorage.removeItem('ezentia_admin_session');
+                currentUser = null;
+                location.reload();
+            }
+        }
+
+        function showAdminPanel() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('adminPanel').classList.remove('hidden');
+            updateStats();
+            renderProducts();
+        }
+
+        // ==========================================
+        // FUNCIONES DE PERSISTENCIA
+        // ==========================================
+
+        function saveData() {
+            // Guardar en localStorage
+            localStorage.setItem('ezentia_products', JSON.stringify(products));
+            localStorage.setItem('ezentia_sales', JSON.stringify(sales));
+            
+            // Actualizar estadísticas
+            updateStats();
+        }
+
+        // ==========================================
+        // NAVEGACIÓN DE TABS
+        // ==========================================
+
+        function showTab(tabId) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabId === 'dashboard') updateStats();
+            if (tabId === 'products') renderProducts();
+            if (tabId === 'sales') {
+                renderAllSales();
+                populateProductSelect();
+            }
+        }
+
+        // ==========================================
+        // DASHBOARD
+        // ==========================================
+
+        function updateStats() {
+            const totalRevenue = sales.reduce((sum, s) => sum + (parseFloat(s.total) || 0), 0);
+            const inventoryValue = products.reduce((sum, p) => sum + (parseFloat(p.price) * parseInt(p.stock)), 0);
+
+            document.getElementById('totalSales').textContent = sales.length;
+            document.getElementById('totalRevenue').textContent = '$' + totalRevenue.toLocaleString('es-CO');
+            document.getElementById('totalProducts').textContent = products.length;
+            document.getElementById('inventoryValue').textContent = '$' + inventoryValue.toLocaleString('es-CO');
+
+            renderSalesTable();
+        }
+
+        function renderSalesTable() {
+            const tbody = document.getElementById('salesTableBody');
+            if (sales.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No hay ventas registradas</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = sales.slice(-5).reverse().map(s => `
+                <tr>
+                    <td>#${s.id}</td>
+                    <td>${s.client}</td>
+                    <td>$${(parseFloat(s.total) || 0).toLocaleString('es-CO')}</td>
+                    <td>${s.date || 'Sin fecha'}</td>
+                    <td><span class="status-badge status-${s.status}">${s.status === 'completado' ? 'Completado' : 'Pendiente'}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        // ==========================================
+        // PRODUCTOS
+        // ==========================================
+
+        function renderProducts() {
+            const tbody = document.getElementById('productsTableBody');
+            if (products.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No hay productos en el inventario</td></tr>';
+                return;
+            }
+
+            const catLabels = { 'hombre': 'Hombre', 'mujer': 'Mujer', 'unisex': 'Unisex' };
+            const statusLabels = { 
+                'bestseller': 'Más Vendido', 
+                'nuevo': 'Nuevo', 
+                'normal': 'Normal' 
+            };
+
+            tbody.innerHTML = products.map(p => `
+                <tr>
+                    <td><img src="${p.image}" alt="${p.name}" class="product-image" onerror="this.src='ezentia.png'"></td>
+                    <td><strong>${p.name}</strong></td>
+                    <td>${p.brand}</td>
+                    <td>${catLabels[p.cat] || 'Unisex'}</td>
+                    <td>$${parseFloat(p.price).toLocaleString('es-CO')}</td>
+                    <td>${p.stock}</td>
+                    <td><span class="status-badge" style="background: ${getStatusColor(p.status)}20; color: ${getStatusColor(p.status)}; border: 1px solid ${getStatusColor(p.status)}50;">${statusLabels[p.status] || 'Normal'}</span></td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="editProduct(${p.id})">Editar</button>
+                        <button class="action-btn delete-btn" onclick="deleteProduct(${p.id})">Eliminar</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function getStatusColor(status) {
+            const colors = {
+                'bestseller': '#e99c32',
+                'nuevo': '#27ae60',
+                'normal': '#706f6f'
+            };
+            return colors[status] || '#706f6f';
+        }
+
+        function saveProduct(e) {
+            e.preventDefault();
+
+            const id = document.getElementById('productForm').dataset.editId;
+            const product = {
+                id: id ? parseInt(id) : Date.now(),
+                name: document.getElementById('productName').value,
+                brand: document.getElementById('productBrand').value,
+                cat: document.getElementById('productCategory').value,
+                price: parseFloat(document.getElementById('productPrice').value),
+                stock: parseInt(document.getElementById('productStock').value),
+                image: document.getElementById('productImage').value || 'ezentia.png',
+                presentation: document.getElementById('productPresentation').value,
+                notes: document.getElementById('productNotes').value,
+                sillage: document.getElementById('productSillage').value,
+                status: document.getElementById('productStatus').value,
+                desc: document.getElementById('productDesc').value
+            };
+
+            if (id) {
+                // Editar existente
+                const index = products.findIndex(p => p.id == id);
+                if (index > -1) {
+                    products[index] = product;
+                }
+            } else {
+                // Nuevo producto
+                products.push(product);
+            }
+
+            // Guardar en localStorage
+            saveData();
+            
+            clearForm();
+            renderProducts();
+
+            // Feedback visual
+            const btn = e.target.querySelector('.btn-primary');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> Guardado Exitosamente';
+            setTimeout(() => btn.innerHTML = originalText, 2000);
+        }
+
+        function handleImageUpload(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    document.getElementById('productImage').value = e.target.result;
+                    input.nextElementSibling.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> Imagen cargada correctamente';
+                    input.nextElementSibling.style.color = 'var(--success)';
+                    input.nextElementSibling.style.borderColor = 'var(--success)';
+                };
+                
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function editProduct(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+
+            document.getElementById('productForm').dataset.editId = id;
+            document.getElementById('productName').value = product.name;
+            document.getElementById('productBrand').value = product.brand;
+            document.getElementById('productCategory').value = product.cat || 'hombre';
+            document.getElementById('productPrice').value = product.price;
+            document.getElementById('productStock').value = product.stock;
+            document.getElementById('productImage').value = product.image;
+            document.getElementById('productPresentation').value = product.presentation || '';
+            document.getElementById('productNotes').value = product.notes || '';
+            document.getElementById('productSillage').value = product.sillage || 'Moderado';
+            document.getElementById('productStatus').value = product.status || 'normal';
+            document.getElementById('productDesc').value = product.desc || '';
+
+            // Scroll al formulario
+            document.getElementById('productForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function deleteProduct(id) {
+            if (!confirm('¿Está seguro de eliminar este producto? Esta acción no se puede deshacer.')) return;
+            products = products.filter(p => p.id !== id);
+            saveData();
+            renderProducts();
+        }
+
+        function clearForm() {
+            document.getElementById('productForm').reset();
+            document.getElementById('productForm').dataset.editId = '';
+            const fileLabel = document.getElementById('productImageFile').nextElementSibling;
+            fileLabel.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Subir imagen desde dispositivo';
+            fileLabel.style.color = '';
+            fileLabel.style.borderColor = '';
+        }
+
+        // ==========================================
+        // VENTAS
+        // ==========================================
+
+        function populateProductSelect() {
+            const select = document.getElementById('saleProduct');
+            select.innerHTML = products.map(p => 
+                `<option value="${p.id}">${p.name} - $${parseFloat(p.price).toLocaleString('es-CO')} (Stock: ${p.stock})</option>`
+            ).join('');
+        }
+
+        function saveSale(e) {
+            e.preventDefault();
+
+            const productId = parseInt(document.getElementById('saleProduct').value);
+            const product = products.find(p => p.id === productId);
+            const quantity = parseInt(document.getElementById('saleQuantity').value);
+
+            if (!product || product.stock < quantity) {
+                alert('Stock insuficiente para realizar esta venta');
+                return;
+            }
+
+            const sale = {
+                id: Date.now(),
+                client: document.getElementById('clientName').value,
+                productId: productId,
+                productName: product.name,
+                quantity: quantity,
+                total: parseFloat(document.getElementById('saleTotal').value),
+                date: new Date().toLocaleDateString('es-CO'),
+                status: document.getElementById('saleStatus').value
+            };
+
+            sales.push(sale);
+            product.stock -= quantity;
+
+            // Guardar TODO en localStorage
+            saveData();
+            
+            document.getElementById('saleForm').reset();
+            renderAllSales();
+            populateProductSelect();
+
+            // Feedback visual
+            const btn = e.target.querySelector('.btn-success');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> Venta Registrada';
+            setTimeout(() => btn.innerHTML = originalText, 2000);
+        }
+
+        function renderAllSales() {
+            const tbody = document.getElementById('allSalesTableBody');
+            if (sales.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No hay ventas registradas</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = sales.sort((a, b) => b.id - a.id).map(s => `
+                <tr>
+                    <td>#${s.id}</td>
+                    <td>${s.client}</td>
+                    <td>${s.productName}</td>
+                    <td>${s.quantity}</td>
+                    <td>$${(parseFloat(s.total) || 0).toLocaleString('es-CO')}</td>
+                    <td>${s.date || 'Sin fecha'}</td>
+                    <td><span class="status-badge status-${s.status}">${s.status === 'completado' ? 'Completado' : 'Pendiente'}</span></td>
+                    <td>
+                        ${s.status === 'pendiente' ? `<button class="action-btn edit-btn" onclick="completeSale(${s.id})">Completar</button>` : ''}
+                        <button class="action-btn delete-btn" onclick="deleteSale(${s.id})">Eliminar</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function completeSale(id) {
+            const sale = sales.find(s => s.id === id);
+            if (sale) {
+                sale.status = 'completado';
+                saveData();
+                renderAllSales();
+                updateStats();
+            }
+        }
+
+        function deleteSale(id) {
+            if (!confirm('¿Está seguro de eliminar esta venta?')) return;
+            sales = sales.filter(s => s.id !== id);
+            saveData();
+            renderAllSales();
+            updateStats();
+        }
+
+        // Calcular total automático
+        document.getElementById('saleProduct')?.addEventListener('change', updateSaleTotal);
+        document.getElementById('saleQuantity')?.addEventListener('input', updateSaleTotal);
+
+        function updateSaleTotal() {
+            const productId = parseInt(document.getElementById('saleProduct').value);
+            const product = products.find(p => p.id === productId);
+            const quantity = parseInt(document.getElementById('saleQuantity').value) || 1;
+            if (product) {
+                document.getElementById('saleTotal').value = (product.price * quantity).toFixed(2);
+            }
+        }
+
+        // ==========================================
+        // UTILIDADES
+        // ==========================================
+
+        function toggleMenu() {
+            document.getElementById('navLinks').classList.toggle('active');
+            document.getElementById('menuToggle').classList.toggle('active');
+        }
+
+        document.addEventListener('click', function(e) {
+            const nav = document.getElementById('navLinks');
+            const toggle = document.getElementById('menuToggle');
+            if (!nav.contains(e.target) && !toggle.contains(e.target)) {
+                nav.classList.remove('active');
+                toggle.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

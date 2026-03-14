@@ -1,0 +1,1786 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos | EZENTIA Perfumería Luxury</title>
+    <link rel="icon" type="image/png" href="ezentia.png">
+    <style>
+        @font-face {
+            font-family: 'Hoefler Text';
+            src: local('Hoefler Text'), local('HoeflerText');
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        @font-face {
+            font-family: 'Hoefler Text';
+            src: local('Hoefler Text Italic'), local('HoeflerText-Italic');
+            font-weight: normal;
+            font-style: italic;
+        }
+
+        :root {
+            /* Colores principales según manual de marca */
+            --brown-dark: #423836;
+            --brown-rgb: 66, 56, 54;
+            --gray-light: #c1bfbf;
+            --gray-medium: #706f6f;
+            --yellow-primary: #e99c32;
+            --yellow-light: #f5b85a;
+            --yellow-dark: #c47d20;
+            
+            /* Auras por categoría */
+            --aura-hombre: #3498db;
+            --aura-mujer: #ff69b4;
+            --aura-unisex: #2ecc71;
+            
+            /* Aplicaciones */
+            --bg-primary: #423836;
+            --bg-secondary: #2a2423;
+            --text-primary: #c1bfbf;
+            --text-secondary: #706f6f;
+            --accent: #e99c32;
+            --white: #ffffff;
+            
+            /* Glass effect actualizado */
+            --glass-bg: rgba(66, 56, 54, 0.45);
+            --glass-border: rgba(233, 156, 50, 0.18);
+            --glass-blur: blur(20px);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Hoefler Text', 'Times New Roman', serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(to bottom, var(--yellow-dark), var(--yellow-primary)); border-radius: 10px; }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes float { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-18px) rotate(5deg); } }
+        @keyframes particleFloat { 0% { transform: translateY(100vh) rotate(0deg); opacity: 0; } 10% { opacity: 0.6; } 90% { opacity: 0.6; } 100% { transform: translateY(-100px) rotate(180deg); opacity: 0; } }
+        @keyframes auraPulseHombre { 0%, 100% { box-shadow: 0 0 25px rgba(52, 152, 219, 0.4); } 50% { box-shadow: 0 0 50px rgba(52, 152, 219, 0.8); } }
+        @keyframes auraPulseMujer { 0%, 100% { box-shadow: 0 0 25px rgba(255, 105, 180, 0.4); } 50% { box-shadow: 0 0 50px rgba(255, 105, 180, 0.8); } }
+        @keyframes auraPulseUnisex { 0%, 100% { box-shadow: 0 0 25px rgba(46, 204, 113, 0.4); } 50% { box-shadow: 0 0 50px rgba(46, 204, 113, 0.8); } }
+
+        /* ===== PARTICLES ===== */
+        .particles-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--yellow-primary);
+            opacity: 0;
+            animation: particleFloat linear infinite;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            padding: 18px 50px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        header.scrolled {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            padding: 12px 50px;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            height: 42px;
+            width: auto;
+            filter: drop-shadow(0 0 10px rgba(233, 156, 50, 0.3));
+            transition: filter 0.3s ease;
+        }
+
+        .logo:hover .logo-img { filter: drop-shadow(0 0 20px rgba(233, 156, 50, 0.6)); }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-left: auto;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 13px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            position: relative;
+            transition: color 0.3s ease;
+            padding: 5px 0;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--yellow-primary), transparent);
+            transition: width 0.4s ease;
+        }
+
+        .nav-links a:hover, .nav-links a.active { color: var(--yellow-primary); }
+        .nav-links a:hover::before, .nav-links a.active::before { width: 100%; }
+        
+        .nav-links a.panel-link {
+            color: var(--yellow-primary) !important;
+            font-weight: bold;
+            border: 1px solid var(--yellow-primary);
+            padding: 8px 16px !important;
+            background: rgba(233, 156, 50, 0.1);
+            transition: all 0.3s;
+        }
+        
+        .nav-links a.panel-link:hover {
+            background: rgba(233, 156, 50, 0.25) !important;
+            box-shadow: 0 0 15px rgba(233, 156, 50, 0.3);
+        }
+
+        /* Cart Icon */
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .cart-icon:hover {
+            border-color: var(--yellow-primary);
+            background: rgba(233, 156, 50, 0.1);
+        }
+
+        .cart-icon svg {
+            width: 20px; height: 20px;
+            fill: var(--text-primary);
+            transition: fill 0.3s ease;
+        }
+
+        .cart-icon:hover svg { fill: var(--yellow-primary); }
+
+        .cart-count {
+            position: absolute;
+            top: -5px; right: -5px;
+            background: linear-gradient(135deg, var(--yellow-dark), var(--yellow-primary));
+            color: var(--bg-primary);
+            font-size: 10px;
+            min-width: 18px; height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .menu-toggle { display: none; flex-direction: column; gap: 6px; cursor: pointer; padding: 8px; background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); }
+        .menu-toggle span { width: 22px; height: 1px; background: var(--yellow-primary); transition: all 0.3s ease; display: block; }
+
+        /* ===== PAGE HEADER ===== */
+        .page-header {
+            padding: 160px 50px 60px;
+            text-align: center;
+            background: var(--bg-primary);
+            position: relative;
+        }
+
+        .page-title {
+            font-family: 'Hoefler Text', serif;
+            font-size: 48px;
+            font-weight: normal;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--yellow-light) 50%, var(--text-primary) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-title span { color: var(--yellow-primary); font-style: italic; -webkit-text-fill-color: var(--yellow-primary); }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 18px;
+            font-style: italic;
+        }
+
+        /* ===== FILTERS CON BÚSQUEDA INTEGRADA ===== */
+        .filters-container {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 25px 50px;
+        }
+
+        .filters-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-btn { 
+            padding: 12px 30px; 
+            background: var(--glass-bg); 
+            border: 1px solid var(--glass-border); 
+            color: var(--text-secondary); 
+            font-family: 'Hoefler Text', serif;
+            font-size: 13px; 
+            letter-spacing: 2px; 
+            text-transform: uppercase; 
+            cursor: pointer; 
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .filter-btn:hover { 
+            transform: translateY(-2px); 
+            color: var(--yellow-primary); 
+            border-color: var(--yellow-primary); 
+        }
+        
+        .filter-btn.active { 
+            border-color: var(--yellow-primary); 
+            color: var(--yellow-primary); 
+            box-shadow: 0 5px 20px rgba(233, 156, 50, 0.3);
+        }
+        
+        /* Category colors */
+        .filter-btn[data-filter="mujer"]:hover,
+        .filter-btn[data-filter="mujer"].active {
+            border-color: var(--aura-mujer);
+            color: var(--aura-mujer);
+            box-shadow: 0 0 20px rgba(255, 105, 180, 0.4);
+        }
+        
+        .filter-btn[data-filter="hombre"]:hover,
+        .filter-btn[data-filter="hombre"].active {
+            border-color: var(--aura-hombre);
+            color: var(--aura-hombre);
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.4);
+        }
+        
+        .filter-btn[data-filter="unisex"]:hover,
+        .filter-btn[data-filter="unisex"].active {
+            border-color: var(--aura-unisex);
+            color: var(--aura-unisex);
+            box-shadow: 0 0 20px rgba(46, 204, 113, 0.4);
+        }
+        
+        .filter-count { 
+            color: var(--text-secondary); 
+            font-size: 14px; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            margin-left: auto;
+        }
+        
+        .filter-count span { 
+            color: var(--yellow-primary); 
+            font-weight: 600; 
+            font-size: 18px; 
+        }
+
+        /* ===== SEARCH BOX EN FILTROS ===== */
+        .search-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            width: 280px;
+            height: 44px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            font-family: 'Hoefler Text', serif;
+            font-size: 14px;
+            padding: 0 45px 0 20px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--yellow-primary);
+            box-shadow: 0 0 20px rgba(233, 156, 50, 0.2);
+            width: 320px;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 44px;
+            background: transparent;
+            border: none;
+            border-left: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background: rgba(233, 156, 50, 0.1);
+        }
+
+        .search-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover svg,
+        .search-input:focus + .search-btn svg {
+            fill: var(--yellow-primary);
+        }
+
+        .search-clear {
+            position: absolute;
+            right: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 20px;
+            line-height: 1;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .search-clear.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .search-clear:hover {
+            color: var(--yellow-primary);
+        }
+
+        /* ===== PRODUCTS SECTION ===== */
+        .products-section { 
+            padding: 80px 50px; 
+            background: var(--bg-primary);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 35px;
+            max-width: 1200px;
+            margin: 0 auto;
+            justify-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== PRODUCT CARDS ===== */
+        .product-card {
+            background: #ffffff;
+            border: 2px solid rgba(233, 156, 50, 0.35);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            width: 320px;
+            height: 420px;
+            perspective: 1000px;
+        }
+
+        .product-card[data-category="hombre"] {
+            border-color: rgba(52, 152, 219, 0.5);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.15);
+            animation: auraPulseHombre 3s ease-in-out infinite;
+        }
+
+        .product-card[data-category="mujer"] {
+            border-color: rgba(255, 105, 180, 0.5);
+            box-shadow: 0 8px 25px rgba(255, 105, 180, 0.15);
+            animation: auraPulseMujer 3s ease-in-out infinite;
+        }
+
+        .product-card[data-category="unisex"] {
+            border-color: rgba(46, 204, 113, 0.5);
+            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.15);
+            animation: auraPulseUnisex 3s ease-in-out infinite;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .product-card[data-category="hombre"]:hover {
+            border-color: var(--aura-hombre);
+            box-shadow: 0 20px 50px rgba(52, 152, 219, 0.4);
+        }
+
+        .product-card[data-category="mujer"]:hover {
+            border-color: var(--aura-mujer);
+            box-shadow: 0 20px 50px rgba(255, 105, 180, 0.4);
+        }
+
+        .product-card[data-category="unisex"]:hover {
+            border-color: var(--aura-unisex);
+            box-shadow: 0 20px 50px rgba(46, 204, 113, 0.4);
+        }
+
+        .category-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            z-index: 10;
+        }
+
+        .product-card[data-category="hombre"] .category-indicator {
+            background: linear-gradient(to bottom, var(--aura-hombre), #2980b9);
+            box-shadow: 0 0 20px var(--aura-hombre);
+        }
+
+        .product-card[data-category="mujer"] .category-indicator {
+            background: linear-gradient(to bottom, var(--aura-mujer), #c71585);
+            box-shadow: 0 0 20px var(--aura-mujer);
+        }
+
+        .product-card[data-category="unisex"] .category-indicator {
+            background: linear-gradient(to bottom, var(--aura-unisex), #27ae60);
+            box-shadow: 0 0 20px var(--aura-unisex);
+        }
+
+        .category-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: bold;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+        }
+
+        .product-card[data-category="hombre"] .category-badge {
+            background: rgba(52, 152, 219, 0.15);
+            color: var(--aura-hombre);
+            border: 1px solid rgba(52, 152, 219, 0.4);
+        }
+
+        .product-card[data-category="mujer"] .category-badge {
+            background: rgba(255, 105, 180, 0.15);
+            color: var(--aura-mujer);
+            border: 1px solid rgba(255, 105, 180, 0.4);
+        }
+
+        .product-card[data-category="unisex"] .category-badge {
+            background: rgba(46, 204, 113, 0.15);
+            color: var(--aura-unisex);
+            border: 1px solid rgba(46, 204, 113, 0.4);
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+
+        .product-card:hover .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            padding: 30px 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: #ffffff;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+            background: linear-gradient(135deg, #ffffff, #fafafa);
+            border: 2px solid #e99c32;
+        }
+
+        .product-card[data-category="hombre"] .card-back {
+            background: linear-gradient(135deg, #ffffff, rgba(52, 152, 219, 0.05));
+            border-color: var(--aura-hombre);
+        }
+
+        .product-card[data-category="mujer"] .card-back {
+            background: linear-gradient(135deg, #ffffff, rgba(255, 105, 180, 0.05));
+            border-color: var(--aura-mujer);
+        }
+
+        .product-card[data-category="unisex"] .card-back {
+            background: linear-gradient(135deg, #ffffff, rgba(46, 204, 113, 0.05));
+            border-color: var(--aura-unisex);
+        }
+
+        .flip-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-top: 10px;
+            opacity: 0.7;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 10;
+            padding: 4px 12px;
+            background: linear-gradient(135deg, var(--yellow-dark), var(--yellow-primary));
+            color: var(--bg-primary);
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            position: relative;
+            background: #ffffff;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            max-width: 80%;
+            max-height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.25));
+            transition: all 0.6s ease;
+            position: relative;
+            z-index: 2;
+            animation: float 5000ms ease-in-out infinite;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.08);
+        }
+
+        .product-name {
+            font-family: 'Hoefler Text', serif;
+            font-size: 28px;
+            font-weight: normal;
+            margin-bottom: 4px;
+            line-height: 1.2;
+            color: #1a1a1a;
+        }
+
+        .product-brand {
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .product-price {
+            font-family: 'Hoefler Text', serif;
+            font-size: 26px;
+            color: var(--yellow-primary);
+            margin-bottom: 10px;
+        }
+
+        .product-desc {
+            font-size: 15px;
+            color: #6b6b6b;
+            margin-bottom: 12px;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .product-meta {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #6b6b6b;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .add-btn {
+            padding: 10px 16px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(233, 156, 50, 0.3);
+            color: #e99c32;
+            font-family: 'Hoefler Text', serif;
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .product-card[data-category="hombre"] .add-btn {
+            border-color: rgba(52, 152, 219, 0.4);
+            color: var(--aura-hombre);
+        }
+
+        .product-card[data-category="mujer"] .add-btn {
+            border-color: rgba(255, 105, 180, 0.4);
+            color: var(--aura-mujer);
+        }
+
+        .product-card[data-category="unisex"] .add-btn {
+            border-color: rgba(46, 204, 113, 0.4);
+            color: var(--aura-unisex);
+        }
+
+        .add-btn:hover {
+            background: rgba(233, 156, 50, 0.2);
+            border-color: #e99c32;
+        }
+
+        .product-card[data-category="hombre"] .add-btn:hover {
+            background: rgba(52, 152, 219, 0.15);
+            border-color: var(--aura-hombre);
+        }
+
+        .product-card[data-category="mujer"] .add-btn:hover {
+            background: rgba(255, 105, 180, 0.15);
+            border-color: var(--aura-mujer);
+        }
+
+        .product-card[data-category="unisex"] .add-btn:hover {
+            background: rgba(46, 204, 113, 0.15);
+            border-color: var(--aura-unisex);
+        }
+
+        .wa-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 16px;
+            background: rgba(37, 211, 102, 0.1);
+            border: 1px solid rgba(37, 211, 102, 0.3);
+            color: #25D366;
+            font-family: 'Hoefler Text', serif;
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .wa-btn:hover {
+            background: rgba(37, 211, 102, 0.2);
+            border-color: #25D366;
+        }
+
+        /* ===== NO RESULTS ===== */
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 80px 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+            .no-results-icon {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .no-results h3 {
+            font-family: 'Hoefler Text', serif;
+            font-size: 28px;
+            color: var(--yellow-primary);
+            margin-bottom: 15px;
+        }
+
+        .no-results p {
+            color: var(--text-secondary);
+            font-size: 16px;
+            margin-bottom: 25px;
+        }
+
+        .no-results .clear-search {
+            padding: 12px 30px;
+            background: transparent;
+            border: 1px solid var(--yellow-primary);
+            color: var(--yellow-primary);
+            font-family: 'Hoefler Text', serif;
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .no-results .clear-search:hover {
+            background: rgba(233, 156, 50, 0.1);
+            box-shadow: 0 0 20px rgba(233, 156, 50, 0.3);
+        }
+
+        /* ===== CART MODAL ===== */
+        .cart-modal { 
+            display: none; 
+            position: fixed; 
+            top: 0; right: 0; 
+            width: 100%; max-width: 420px; 
+            height: 100vh; 
+            background: rgba(26, 22, 20, 0.95); 
+            backdrop-filter: blur(30px); 
+            border-left: 1px solid var(--glass-border);
+            z-index: 2000; 
+            padding: 30px; 
+            overflow-y: auto;
+            box-shadow: -20px 0 60px rgba(0, 0, 0, 0.6);
+        }
+        .cart-modal.active { 
+            display: block; 
+            animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        @keyframes slideIn { 
+            from { transform: translateX(100%); opacity: 0; } 
+            to { transform: translateX(0); opacity: 1; } 
+        }
+        
+        .cart-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 30px; 
+            padding-bottom: 20px; 
+            border-bottom: 1px solid var(--glass-border); 
+        }
+        .cart-title { 
+            font-family: 'Hoefler Text', serif; 
+            font-size: 24px; 
+            color: var(--yellow-primary); 
+        }
+        .cart-close { 
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary); 
+            font-size: 20px; 
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 36px; 
+            height: 36px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .cart-close:hover {
+            border-color: var(--yellow-primary);
+            color: var(--yellow-primary);
+        }
+        
+        .cart-items { margin-bottom: 30px; }
+        
+        .cart-item { 
+            display: flex; 
+            gap: 15px; 
+            padding: 15px 0; 
+            border-bottom: 1px solid rgba(233, 156, 50, 0.08); 
+        }
+        .cart-item img { 
+            width: 70px; 
+            height: 70px; 
+            object-fit: contain; 
+            background: #ffffff;
+            border: 1px solid rgba(0,0,0,0.1);
+            padding: 8px;
+        }
+        .cart-item-info { flex: 1; }
+        .cart-item-name { 
+            font-family: 'Hoefler Text', serif;
+            font-size: 16px; 
+            margin-bottom: 5px; 
+            color: var(--text-primary);
+        }
+        .cart-item-price { 
+            color: var(--yellow-primary); 
+            font-size: 14px;
+        }
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .qty-btn { 
+            width: 28px; 
+            height: 28px; 
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--yellow-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px; 
+        }
+        .qty-btn:hover {
+            background: rgba(233, 156, 50, 0.2);
+            border-color: var(--yellow-primary);
+        }
+        .cart-item-remove { 
+            background: none; 
+            border: none; 
+            color: #e74c3c; 
+            cursor: pointer;
+            font-size: 12px;
+            text-decoration: underline;
+            margin-top: 5px;
+            transition: color 0.3s ease;
+        }
+        .cart-item-remove:hover { color: #ff6b6b; }
+        
+        .cart-empty { 
+            text-align: center; 
+            padding: 60px 20px; 
+            color: var(--text-secondary); 
+            font-size: 18px;
+            font-style: italic;
+        }
+        .cart-total { 
+            padding: 20px 0; 
+            border-top: 1px solid var(--glass-border); 
+            margin-top: 20px;
+        }
+        .cart-total-row { 
+            display: flex; 
+            justify-content: space-between; 
+            font-family: 'Hoefler Text', serif; 
+            font-size: 20px; 
+            margin-bottom: 20px; 
+            color: var(--text-primary);
+        }
+        .cart-total-value { color: var(--yellow-primary); }
+        
+        .cart-checkout-btn { 
+            width: 100%; 
+            padding: 18px; 
+            background: linear-gradient(135deg, var(--yellow-dark), var(--yellow-primary)); 
+            border: none; 
+            color: var(--bg-primary); 
+            font-family: 'Hoefler Text', serif;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .cart-checkout-btn:hover {
+            background: linear-gradient(135deg, var(--yellow-primary), var(--yellow-light));
+            box-shadow: 0 5px 20px rgba(233, 156, 50, 0.4);
+        }
+        
+        .cart-overlay { 
+            display: none; 
+            position: fixed; 
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 1999; 
+        }
+        .cart-overlay.active { display: block; }
+
+        /* ===== FOOTER ===== */
+        footer { 
+            background: var(--bg-secondary); 
+            padding: 80px 50px 40px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--yellow-primary), transparent);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 60px;
+        }
+        
+        .footer-brand .logo { margin-bottom: 20px; }
+        .footer-brand p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.9;
+        }
+        
+        .footer-title {
+            font-family: 'Hoefler Text', serif;
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--yellow-primary);
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 12px;
+        }
+        
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 25px; height: 1px;
+            background: var(--yellow-primary);
+        }
+        
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .footer-links a::before {
+            content: '';
+            width: 4px; height: 4px;
+            background: var(--yellow-primary);
+            transform: rotate(45deg);
+            opacity: 0;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        .footer-links a:hover { color: var(--yellow-primary); }
+        .footer-links a:hover::before { opacity: 1; }
+        
+        .social-links { display: flex; gap: 10px; margin-top: 25px; }
+        .social-link {
+            width: 42px; height: 42px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .social-link:hover {
+            border-color: var(--yellow-primary);
+            color: var(--yellow-primary);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(233, 156, 50, 0.2);
+            background: rgba(233, 156, 50, 0.1);
+        }
+        
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 60px auto 0;
+            padding-top: 30px;
+            border-top: 1px solid rgba(233, 156, 50, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+        
+        .footer-bottom-links { display: flex; gap: 25px; }
+        .footer-bottom-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .footer-bottom-links a:hover { color: var(--yellow-primary); }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1200px) {
+            .products-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-content { grid-template-columns: repeat(2, 1fr); }
+            
+            .filters-wrapper {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 20px;
+            }
+            
+            .search-wrapper {
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            .search-input,
+            .search-input:focus {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            header { padding: 15px 20px; position: relative; z-index: 999; }
+            
+            /* Reset nav para móvil */
+            nav { position: static; }
+            
+            header.scrolled { padding: 12px 20px; }
+            
+            /* Ocultar nav-links de escritorio */
+            .nav-links { 
+                display: none; 
+            }
+
+            /* Mostrar menú móvil cuando está activo */
+            .nav-links.active {
+                display: flex;
+                position: fixed;
+                top: 60px;
+                left: 0;
+                right: 0;
+                width: 100%;
+                transform: none;
+                background: rgba(66, 56, 54, 0.98);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 0;
+                gap: 0;
+                border-bottom: 2px solid var(--yellow-primary);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+                z-index: 999;
+                max-height: calc(100vh - 60px);
+                overflow-y: auto;
+                animation: slideDown 0.3s ease-out;
+            }
+
+            @keyframes slideDown {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            /* Items del menú móvil */
+            .nav-links.active li {
+                width: 100%;
+                border-bottom: 1px solid rgba(233, 156, 50, 0.1);
+                list-style: none;
+            }
+
+            .nav-links.active li:last-child {
+                border-bottom: none;
+            }
+
+            .nav-links.active a {
+                display: block;
+                padding: 16px 20px;
+                font-size: 14px;
+                letter-spacing: 3px;
+                text-align: center;
+                width: 100%;
+                color: var(--text-primary);
+                text-decoration: none;
+                transition: all 0.3s ease;
+            }
+
+            .nav-links.active a::before {
+                display: none;
+            }
+
+            .nav-links.active a:hover, 
+            .nav-links.active a.active {
+                background: rgba(233, 156, 50, 0.1);
+                color: var(--yellow-primary);
+            }
+
+            /* Panel link en móvil */
+            .nav-links.active a.panel-link {
+                margin: 10px 15px 15px;
+                border: 1px solid var(--yellow-primary);
+                padding: 12px !important;
+                background: rgba(233, 156, 50, 0.15);
+                border-radius: 4px;
+                display: block;
+            }
+
+            /* Botón hamburguesa visible en móvil */
+            .menu-toggle { 
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 5px;
+                cursor: pointer;
+                padding: 10px;
+                width: 44px;
+                height: 44px;
+                background: var(--glass-bg);
+                backdrop-filter: blur(10px);
+                border: 1px solid var(--glass-border);
+                border-radius: 4px;
+                transition: all 0.3s ease;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .menu-toggle:active {
+                background: rgba(233, 156, 50, 0.2);
+                transform: scale(0.95);
+            }
+
+            .menu-toggle span {
+                width: 22px; 
+                height: 2px;
+                background: var(--yellow-primary);
+                transition: all 0.3s ease;
+                display: block;
+            }
+
+            .menu-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+            .menu-toggle.active span:nth-child(2) { opacity: 0; }
+            .menu-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+            
+            .page-header { padding: 140px 20px 40px; }
+            .page-title { font-size: 32px; }
+            
+            .filters-container { padding: 20px; }
+            .filters { justify-content: center; }
+            .filter-btn { padding: 10px 20px; font-size: 12px; }
+            .filter-count { margin-left: 0; width: 100%; justify-content: center; }
+            
+            .products-section { padding: 40px 20px; }
+            .products-grid { grid-template-columns: 1fr; }
+            .product-card { width: 100%; max-width: 320px; }
+            
+            .footer-content { grid-template-columns: 1fr; text-align: center; }
+            .footer-title::after { left: 50%; transform: translateX(-50%); }
+            .footer-links a::before { display: none; }
+            .social-links { justify-content: center; }
+            .footer-bottom { flex-direction: column; text-align: center; gap: 15px; }
+            
+            .cart-modal { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles-container" id="particles"></div>
+
+    <header id="header">
+        <nav>
+            <a href="index.html" class="logo">
+                <img src="ezentia.png" alt="EZENTIA" class="logo-img">
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="productos.html" class="active">Productos</a></li>
+                <li><a href="nosotros.html">Nosotros</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+            </ul>
+            <div class="nav-right">
+                <div class="cart-icon" onclick="openCart()">
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                    <span class="cart-count" id="cartCount">0</span>
+                </div>
+            </div>
+            <div class="menu-toggle" id="menuToggle">
+                <span></span><span></span><span></span>
+            </div>
+        </nav>
+    </header>
+
+    <section class="page-header">
+        <h1 class="page-title">Nuestros <span>Perfumes</span></h1>
+        <p class="page-subtitle">Fragancias exclusivas para cada personalidad</p>
+    </section>
+
+    <!-- FILTERS CON BÚSQUEDA INTEGRADA -->
+    <div class="filters-container">
+        <div class="filters-wrapper">
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all" onclick="filterProducts('all',this)">Todos</button>
+                <button class="filter-btn" data-filter="hombre" onclick="filterProducts('hombre',this)">Hombre</button>
+                <button class="filter-btn" data-filter="mujer" onclick="filterProducts('mujer',this)">Mujer</button>
+                <button class="filter-btn" data-filter="unisex" onclick="filterProducts('unisex',this)">Unisex</button>
+            </div>
+            
+            <div class="search-wrapper">
+                <div class="search-box">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Buscar perfumes..." autocomplete="off">
+                    <button class="search-clear" id="searchClear">&times;</button>
+                    <button class="search-btn" onclick="performSearch()">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <span class="filter-count">Mostrando <span id="count">0</span> fragancias</span>
+        </div>
+    </div>
+
+    <section class="products-section">
+        <div class="products-grid" id="productsContainer"></div>
+    </section>
+
+    <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-header">
+            <h2 class="cart-title">Tu Carrito</h2>
+            <button class="cart-close" onclick="closeCart()">&times;</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <div class="cart-empty">Tu carrito está vacío</div>
+        </div>
+        <div class="cart-total" id="cartTotalSection" style="display:none">
+            <div class="cart-total-row">
+                <span>Total:</span>
+                <span class="cart-total-value" id="cartTotal">$0</span>
+            </div>
+            <button class="cart-checkout-btn" onclick="checkout()">Comprar por WhatsApp</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="index.html" class="logo">
+                    <img src="ezentia.png" alt="EZENTIA" class="logo-img">
+                </a>
+                <p>EZENTIA es tu destino para fragancias de lujo originales. Encuentra tu aroma perfecto con nosotros.</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/ezentia.pl" class="social-link" target="_blank">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    </a>
+                    <a href="https://wa.me/573016952398" class="social-link" target="_blank">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    </a>
+                    <a href="mailto:info@ezentia.com" class="social-link" target="_blank">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4 class="footer-title">Navegación</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="productos.html">Productos</a></li>
+                    <li><a href="nosotros.html">Nosotros</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4 class="footer-title">Contacto</h4>
+                <ul class="footer-links">
+                    <li><a href="tel:+573016952398">+57 301 695 2398</a></li>
+                    <li><a href="mailto:info@ezentia.com">info@ezentia.com</a></li>
+                    <li style="color: var(--text-secondary); font-size: 15px; padding-left: 12px;">El Santuario, Antioquia</li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4 class="footer-title">Marcas</h4>
+                <ul class="footer-links">
+                    <li><a href="productos.html">Lattafa</a></li>
+                    <li><a href="productos.html">Nautica</a></li>
+                    <li><a href="productos.html">Ver Todas</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2024 EZENTIA Perfumería Luxury. Todos los derechos reservados.</p>
+            <div class="footer-bottom-links">
+                <a href="#">Privacidad</a>
+                <a href="#">Términos</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Variables globales
+        let searchQuery = '';
+        let currentFilter = 'all';
+        let cart = JSON.parse(localStorage.getItem('ezentia_cart')) || [];
+
+        // Referencias DOM
+        const searchInput = document.getElementById('searchInput');
+        const searchClear = document.getElementById('searchClear');
+        const productsContainer = document.getElementById('productsContainer');
+
+        // Event listeners de búsqueda
+        searchInput.addEventListener('input', function(e) {
+            searchQuery = e.target.value.toLowerCase().trim();
+            
+            // Mostrar/ocultar botón limpiar
+            if (searchQuery.length > 0) {
+                searchClear.classList.add('visible');
+            } else {
+                searchClear.classList.remove('visible');
+            }
+            
+            // Buscar inmediatamente
+            loadProducts();
+        });
+
+        // Botón limpiar
+        searchClear.addEventListener('click', function() {
+            searchInput.value = '';
+            searchQuery = '';
+            searchClear.classList.remove('visible');
+            searchInput.focus();
+            loadProducts();
+        });
+
+        // Tecla Enter
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        function performSearch() {
+            loadProducts();
+        }
+
+        // Cargar productos del panel de admin desde localStorage
+        function loadProductsFromAdmin() {
+            const storedProducts = localStorage.getItem('ezentia_products');
+            if (storedProducts) {
+                return JSON.parse(storedProducts);
+            }
+            // Productos por defecto si no hay en localStorage
+            return [
+                { id:1, name:'Khamrah', brand:'Lattafa', price:185000, cat:'unisex', img:'khamrah.png', status:'nuevo', desc:'Fragancia oriental exuberante con notas de vainilla, caramelo y especias. Dulzón y persistente.', notes:'Canela, Vainilla, Madera de agar', duration:'8-10 horas', sillage:'Intenso' },
+                { id:2, name:'Asad', brand:'Lattafa', price:175000, cat:'hombre', img:'asad.png', status:'', desc:'Masculina y sofisticada con notas amaderadas y especiadas. Elegancia pura.', notes:'Pachulí, Sándalo, Ámbar', duration:'6-8 horas', sillage:'Moderado' },
+                { id:3, name:'Nautica Voyage', brand:'Nautica', price:145000, cat:'hombre', img:'nautica.png', status:'bestseller', desc:'Fresca y marina con notas acuáticas. Perfecta para el día a día.', notes:'Notas marinas, Cedro, Musgo', duration:'5-7 horas', sillage:'Moderado' },
+                { id:4, name:'Yara', brand:'Lattafa', price:165000, cat:'mujer', img:'yara.png', status:'nuevo', desc:'Dulce y seductor con notas de frutas tropicales. Irresistible.', notes:'Helado, Frutas, Caramelo', duration:'6-8 horas', sillage:'Intenso' }
+            ];
+        }
+        
+        let products = loadProductsFromAdmin();
+
+        function filterProducts(filter, btn) {
+            currentFilter = filter;
+            
+            // Actualizar botones activos
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            loadProducts();
+        }
+
+        function loadProducts() {
+            // Filtrar por categoría primero
+            let filtered = currentFilter === 'all' 
+                ? products 
+                : products.filter(p => (p.cat === currentFilter || p.category === currentFilter));
+            
+            // Luego filtrar por búsqueda
+            if (searchQuery.length > 0) {
+                filtered = filtered.filter(p => {
+                    const name = (p.name || '').toLowerCase();
+                    const brand = (p.brand || '').toLowerCase();
+                    const desc = (p.desc || '').toLowerCase();
+                    const notes = (p.notes || '').toLowerCase();
+                    
+                    return name.includes(searchQuery) || 
+                           brand.includes(searchQuery) || 
+                           desc.includes(searchQuery) || 
+                           notes.includes(searchQuery);
+                });
+            }
+            
+            // Actualizar contador
+            document.getElementById('count').textContent = filtered.length;
+
+            let html = '';
+            
+            // Si no hay resultados
+            if (filtered.length === 0) {
+                const searchTerm = searchQuery ? ` para "${searchQuery}"` : '';
+                const categoryTerm = currentFilter !== 'all' ? ` en ${currentFilter}` : '';
+                
+                                html = `
+                    <div class="no-results">
+                        <div class="no-results-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width: 60px; height: 60px; color: var(--yellow-primary); opacity: 0.5;">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="M21 21l-4.35-4.35"></path>
+                            </svg>
+                        </div>
+                        <h3>No encontramos resultados${searchTerm}${categoryTerm}</h3>
+                        <p>Intenta con otros términos o revisa todas las categorías.</p>
+                        <button class="clear-search" onclick="clearAllFilters()">Ver todos los productos</button>
+                    </div>
+                `;
+            } else {
+                filtered.forEach(p => {
+                    const categoria = p.cat || p.category || 'unisex';
+                    
+                    let badge = '';
+                    if(p.status === 'nuevo') {
+                        badge = '<span class="product-badge">Nuevo</span>';
+                    } else if(p.status === 'bestseller') {
+                        badge = '<span class="product-badge">Best Seller</span>';
+                    }
+
+                    // Destacar coincidencias en el nombre
+                    let displayName = p.name;
+                    if (searchQuery.length > 0) {
+                        const regex = new RegExp(`(${escapeRegex(searchQuery)})`, 'gi');
+                        displayName = p.name.replace(regex, '<mark style="background: rgba(233, 156, 50, 0.4); color: #1a1a1a; padding: 0 3px; border-radius: 2px;">$1</mark>');
+                    }
+
+                    html += `
+                        <div class="product-card" data-category="${categoria}">
+                            <div class="category-indicator"></div>
+                            <span class="category-badge">${categoria}</span>
+                            <div class="card-inner">
+                                <div class="card-front">
+                                    ${badge}
+                                    <div class="product-image">
+                                        <img src="${p.image || p.img || 'khamrah.png'}" alt="${p.name}">
+                                    </div>
+                                    <h3 class="product-name">${displayName}</h3>
+                                    <p class="product-brand">${p.brand}</p>
+                                    <p class="product-price">$${p.price.toLocaleString()}</p>
+                                    <p class="flip-hint">Hover para más info</p>
+                                </div>
+                                <div class="card-back">
+                                    <h3 class="product-name">${p.name}</h3>
+                                    <p class="product-desc">${p.desc || 'Fragancia exclusiva de EZENTIA'}</p>
+                                    <p class="product-meta"><span>Notas: ${p.notes || 'N/A'}</span></p>
+                                    <p class="product-meta"><span>Duración: ${p.duration || '6-8 horas'}</span></p>
+                                    <p class="product-meta"><span>Sillage: ${p.sillage || 'Moderado'}</span></p>
+                                    <div class="product-actions">
+                                        <button class="add-btn" id="btn${p.id}" onclick="addToCart(${p.id})">+ Carrito</button>
+                                        <a href="https://wa.me/573016952398?text=Hola,%20me%20interesa%20comprar%20${encodeURIComponent(p.name)}" class="wa-btn" target="_blank">WhatsApp</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            productsContainer.innerHTML = html;
+        }
+
+        // Escapar caracteres especiales para regex
+        function escapeRegex(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        // Limpiar todos los filtros
+        function clearAllFilters() {
+            searchQuery = '';
+            currentFilter = 'all';
+            searchInput.value = '';
+            searchClear.classList.remove('visible');
+            
+            // Resetear botones de filtro
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('.filter-btn[data-filter="all"]').classList.add('active');
+            
+            loadProducts();
+        }
+
+        function updateCartCount() {
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+
+        function addToCart(id) {
+            const p = products.find(product => product.id === id);
+            if(!p) return;
+            
+            const existing = cart.find(item => item.id === id);
+            if(existing) {
+                existing.quantity++;
+            } else {
+                cart.push({ id: p.id, name: p.name, price: p.price, img: p.image || p.img, quantity: 1 });
+            }
+            
+            localStorage.setItem('ezentia_cart', JSON.stringify(cart));
+            updateCartCount();
+            
+            const btn = document.getElementById('btn' + id);
+            if(btn) {
+                btn.textContent = '✓ Agregado';
+                btn.style.background = 'rgba(39, 174, 96, 0.2)';
+                btn.style.borderColor = '#27ae60';
+                btn.style.color = '#27ae60';
+                setTimeout(() => {
+                    btn.textContent = '+ Carrito';
+                    btn.style.background = '';
+                    btn.style.borderColor = '';
+                    btn.style.color = '';
+                }, 1500);
+            }
+        }
+
+        function openCart() {
+            document.getElementById('cartModal').classList.add('active');
+            document.getElementById('cartOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            renderCart();
+        }
+
+        function closeCart() {
+            document.getElementById('cartModal').classList.remove('active');
+            document.getElementById('cartOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cartItems');
+            const totalSection = document.getElementById('cartTotalSection');
+            
+            if(cart.length === 0) {
+                container.innerHTML = '<div class="cart-empty">Tu carrito está vacío</div>';
+                totalSection.style.display = 'none';
+                return;
+            }
+            
+            totalSection.style.display = 'block';
+            let total = 0;
+            
+            container.innerHTML = cart.map((item, index) => {
+                total += item.price * item.quantity;
+                return `
+                    <div class="cart-item">
+                        <img src="${item.img}" alt="${item.name}">
+                        <div class="cart-item-info">
+                            <h4 class="cart-item-name">${item.name}</h4>
+                            <p class="cart-item-price">$${item.price.toLocaleString()}</p>
+                            <div class="cart-item-quantity">
+                                <button class="qty-btn" onclick="updateQuantity(${index}, -1)">-</button>
+                                <span>${item.quantity}</span>
+                                <button class="qty-btn" onclick="updateQuantity(${index}, 1)">+</button>
+                            </div>
+                            <button class="cart-item-remove" onclick="removeItem(${index})">Eliminar</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('cartTotal').textContent = '$' + total.toLocaleString();
+        }
+
+        function updateQuantity(index, change) {
+            cart[index].quantity += change;
+            if(cart[index].quantity <= 0) {
+                cart.splice(index, 1);
+            }
+            localStorage.setItem('ezentia_cart', JSON.stringify(cart));
+            updateCartCount();
+            renderCart();
+        }
+
+        function removeItem(index) {
+            cart.splice(index, 1);
+            localStorage.setItem('ezentia_cart', JSON.stringify(cart));
+            updateCartCount();
+            renderCart();
+        }
+
+        function checkout() {
+            if(cart.length === 0) return;
+            let message = 'Hola, quiero comprar:%0A';
+            let total = 0;
+            cart.forEach(item => {
+                message += `- ${item.name} x${item.quantity}: $${(item.price * item.quantity).toLocaleString()}%0A`;
+                total += item.price * item.quantity;
+            });
+            message += `%0ATotal: $${total.toLocaleString()}`;
+            cart = [];
+            localStorage.setItem('ezentia_cart', JSON.stringify(cart));
+            updateCartCount();
+            closeCart();
+            window.open('https://wa.me/573016952398?text=' + message, '_blank');
+        }
+
+        // Particles
+        const particlesContainer = document.getElementById('particles');
+        for(let i=0; i<18; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left =             Math.random() * 100 + '%';
+            p.style.animationDuration = (Math.random() * 18 + 12) + 's';
+            p.style.animationDelay = (Math.random() * 18) + 's';
+            const size = (Math.random() * 4 + 2) + 'px';
+            p.style.width = size;
+            p.style.height = size;
+            p.style.transform = 'rotate(45deg)';
+            p.style.opacity = (Math.random() * 0.3).toString();
+            particlesContainer.appendChild(p);
+        }
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            document.getElementById('header').classList.toggle('scrolled', window.scrollY > 80);
+        });
+
+        // Mobile menu toggle
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.getElementById('navLinks').classList.toggle('active');
+            this.classList.toggle('active');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const nav = document.getElementById('navLinks');
+            const toggle = document.getElementById('menuToggle');
+            if (!nav.contains(e.target) && !toggle.contains(e.target)) {
+                nav.classList.remove('active');
+                toggle.classList.remove('active');
+            }
+        });
+
+        // Inicializar
+        updateCartCount();
+        loadProducts();
+        
+        // Agregar link de Panel al navbar si hay sesión de admin
+        if (localStorage.getItem('ezentia_admin_session')) {
+            const navLinks = document.getElementById('navLinks');
+            if (navLinks) {
+                const panelLink = document.createElement('li');
+                panelLink.innerHTML = '<a href="admin.html" class="panel-link">Panel</a>';
+                navLinks.appendChild(panelLink);
+            }
+        }
+    </script>
+</body>
+</html>
