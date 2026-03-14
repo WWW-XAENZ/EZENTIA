@@ -6,6 +6,9 @@
     <title>EZENTIA - Panel de Administración</title>
     <link rel="icon" type="image/png" href="ezentia.png">
 
+    <!-- SUPABASE SDK - Versión UMD correcta -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2.39.0/dist/umd/supabase.js"></script>
+
     <style>
         @font-face {
             font-family: 'Hoefler Text';
@@ -74,7 +77,6 @@
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes borderGlow { 0%, 100% { border-color: rgba(233, 156, 50, 0.2); } 50% { border-color: rgba(233, 156, 50, 0.6); } }
 
-        /* fondo con imagen de la pagina */
         .background-layer {
             position: fixed;
             top: 0;
@@ -99,7 +101,6 @@
             z-index: -1;
         }
 
-        /* ===== HEADER ===== */
         header {
             position: fixed;
             top: 0;
@@ -242,7 +243,6 @@
             height: 16px;
         }
 
-        /* ===== MENU TOGGLE ===== */
         .menu-toggle {
             display: none;
             flex-direction: column;
@@ -284,7 +284,6 @@
         .menu-toggle.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
         .menu-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
 
-        /* Overlay para menú móvil */
         .mobile-menu-overlay {
             display: none;
             position: fixed;
@@ -304,7 +303,6 @@
             opacity: 1;
         }
 
-        /* contenido principal */
         .main-content {
             padding-top: 100px;
             min-height: 100vh;
@@ -350,7 +348,6 @@
             letter-spacing: 1px;
         }
 
-        /* paneles */
         .panel {
             display: none;
             animation: fadeIn 0.5s ease;
@@ -358,7 +355,6 @@
 
         .panel.active { display: block; }
 
-        /* tabs */
         .tabs {
             display: flex;
             gap: 0;
@@ -399,7 +395,6 @@
             background: rgba(233, 156, 50, 0.1);
         }
 
-        /* tarjetas de vidrio */
         .glass-card {
             background: var(--glass-bg);
             backdrop-filter: var(--glass-blur);
@@ -431,7 +426,6 @@
             gap: 12px;
         }
 
-        /* estadisticas */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -508,7 +502,6 @@
             text-transform: uppercase;
         }
 
-        /* formularios */
         .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -556,7 +549,6 @@
             color: rgba(193, 191, 191, 0.4);
         }
 
-        /* Textarea para descripción */
         .form-group textarea {
             min-height: 100px;
             resize: vertical;
@@ -594,7 +586,6 @@
             background: rgba(233, 156, 50, 0.08);
         }
 
-        /* botones */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -674,7 +665,6 @@
             transform: translateY(-3px);
         }
 
-        /* tablas */
         .table-container {
             overflow-x: auto;
             border-radius: 10px;
@@ -764,7 +754,6 @@
             font-size: 16px;
         }
 
-        /* login */
         .login-container {
             min-height: 100vh;
             display: flex;
@@ -835,7 +824,6 @@
 
         .hidden { display: none !important; }
 
-        /* indicador de estado */
         .status-badge {
             display: inline-block;
             padding: 4px 12px;
@@ -857,7 +845,32 @@
             border: 1px solid rgba(39, 174, 96, 0.3);
         }
 
-        /* ===== RESPONSIVE ===== */
+        .sync-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(39, 174, 96, 0.15);
+            border: 1px solid rgba(39, 174, 96, 0.3);
+            border-radius: 20px;
+            color: var(--success);
+            font-size: 12px;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+
+        .sync-indicator.syncing {
+            background: rgba(233, 156, 50, 0.15);
+            border-color: rgba(233, 156, 50, 0.3);
+            color: var(--yellow-primary);
+        }
+
+        .sync-indicator.error {
+            background: rgba(192, 57, 43, 0.15);
+            border-color: rgba(192, 57, 43, 0.3);
+            color: var(--danger);
+        }
+
         @media (max-width: 1200px) {
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
         }
@@ -873,7 +886,6 @@
         }
 
         @media (max-width: 768px) {
-            /* Header móvil */
             header { 
                 padding: 12px 15px; 
                 position: fixed;
@@ -881,7 +893,6 @@
             
             nav { position: relative; }
 
-            /* Ocultar nav-links de escritorio */
             .nav-links { 
                 display: none;
                 position: static;
@@ -889,7 +900,6 @@
                 left: auto;
             }
 
-            /* Mostrar menú móvil cuando está activo */
             .nav-links.mobile-active {
                 display: flex;
                 position: fixed;
@@ -952,41 +962,32 @@
                 display: block;
             }
 
-            /* Mostrar menú hamburguesa */
             .menu-toggle { display: flex; }
 
-            /* Ajustes logo */
             .logo-img { height: 32px; }
 
-            /* Main content ajustes */
             .main-content { padding-top: 70px; }
             .container { padding: 1rem; }
             .page-title { font-size: 32px; }
             .page-header { padding: 1rem 0; margin-bottom: 2rem; }
 
-            /* Stats grid */
             .stats-grid { grid-template-columns: 1fr; gap: 1rem; }
             .stat-card { padding: 1.5rem; }
             .stat-value { font-size: 2rem; }
 
-            /* Tabs */
             .tabs { padding: 0; }
             .tab-btn { padding: 1rem 1.5rem; font-size: 11px; }
 
-            /* Glass cards */
             .glass-card { padding: 1.5rem; }
             .glass-card h2 { font-size: 1.2rem; }
 
-            /* Form grid */
             .form-grid { grid-template-columns: 1fr; gap: 1rem; }
 
-            /* Tablas */
             .table-container { overflow-x: auto; }
             th, td { padding: 0.8rem; font-size: 13px; }
             .product-image { width: 50px; height: 50px; }
             .action-btn { padding: 6px 12px; font-size: 10px; margin-right: 0.25rem; }
 
-            /* Login */
             .login-box { padding: 2.5rem 1.5rem; }
             .login-title { font-size: 24px; }
         }
@@ -1002,7 +1003,6 @@
             .logout-btn svg { width: 14px; height: 14px; }
         }
 
-        /* Reducir motion para accesibilidad */
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
                 animation-duration: 0.01ms !important;
@@ -1015,11 +1015,9 @@
 </head>
 <body>
 
-    <!-- fondo -->
     <div class="background-layer"></div>
     <div class="background-overlay"></div>
 
-    <!-- login -->
     <div id="loginScreen" class="login-container">
         <div class="login-box">
             <img src="ezentiaWhite.png" alt="EZENTIA" class="login-logo">
@@ -1037,9 +1035,7 @@
         </div>
     </div>
 
-    <!-- panel admin -->
     <div id="adminPanel" class="hidden">
-        <!-- Overlay para menú móvil -->
         <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
 
         <header>
@@ -1077,6 +1073,12 @@
                 <div class="page-header">
                     <h1 class="page-title">Panel de Control</h1>
                     <p class="page-subtitle">Gestiona tus productos, ventas e inventario desde un solo lugar</p>
+                    <div id="syncStatus" class="sync-indicator syncing" style="display: none;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+                        </svg>
+                        <span>Sincronizando con la nube...</span>
+                    </div>
                 </div>
 
                 <div class="tabs">
@@ -1085,7 +1087,6 @@
                     <button class="tab-btn" onclick="showTab('sales')">Ventas</button>
                 </div>
 
-                <!-- dashboard -->
                 <div id="dashboard" class="panel active">
                     <div class="stats-grid">
                         <div class="stat-card">
@@ -1160,7 +1161,6 @@
                     </div>
                 </div>
 
-                <!-- productos -->
                 <div id="products" class="panel">
                     <div class="glass-card">
                         <h2>
@@ -1235,7 +1235,6 @@
                                     </select>
                                 </div>
                             </div>
-                            <!-- Campo de descripción - Fila completa -->
                             <div class="form-group" style="margin-top: 1.5rem;">
                                 <label>Descripción del Producto</label>
                                 <textarea id="productDesc" placeholder="Describe la fragancia, sus notas, carácter, ocasiones de uso..."></textarea>
@@ -1275,7 +1274,6 @@
                     </div>
                 </div>
 
-                <!-- ventas -->
                 <div id="sales" class="panel">
                     <div class="glass-card">
                         <h2>
@@ -1353,111 +1351,259 @@
 
     <script>
         // ==========================================
-        // CONFIGURACIÓN Y DATOS INICIALES
+        // CONFIGURACIÓN SUPABASE - REEMPLAZA ESTAS LLAVES
         // ==========================================
         
+        // ⚠️ REEMPLAZA CON TUS LLAVES DE SUPABASE:
+        const SUPABASE_URL = 'https://dzcpxzulfnrojoshkwgm.supabase.co';  
+        const SUPABASE_KEY = 'sb_publishable_fQwV5kAB6eYR1xNWi980JA_8YUi14_N';  
+        
+        // Inicializar cliente Supabase (formato UMD correcto)
+        let supabaseClient;
+        try {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            console.log('Supabase conectado correctamente');
+        } catch (e) {
+            console.error('Error conectando Supabase:', e);
+        }
+
         const ADMIN_PASSWORD = 'Bonilla67@';
         let currentUser = localStorage.getItem('ezentia_admin_session');
-
-        // Productos por defecto - se cargan SOLO si no hay datos en localStorage
-        const defaultProducts = [
-            { 
-                id: 1, 
-                name: "Santal 33", 
-                brand: "Le Labo", 
-                cat: "unisex", 
-                price: 180000, 
-                stock: 5, 
-                image: "leau.png", 
-                presentation: "50ml", 
-                notes: "Sandalwood, Violet, Cedar", 
-                sillage: "Intenso", 
-                status: "bestseller",
-                desc: "Fragancia artesanal con notas de sándalo, violeta y cedro. Unisex y sofisticada."
-            },
-            { 
-                id: 2, 
-                name: "Black Orchid", 
-                brand: "Tom Ford", 
-                cat: "mujer", 
-                price: 150000, 
-                stock: 3, 
-                image: "blackout.png", 
-                presentation: "100ml", 
-                notes: "Truffle, Black Currant, Orchid", 
-                sillage: "Intenso", 
-                status: "normal",
-                desc: "Elegante y misteriosa con notas de trufa, grosella negra y orquídea."
-            },
-            { 
-                id: 3, 
-                name: "Santal Blanc", 
-                brand: "Chanel", 
-                cat: "unisex", 
-                price: 135000, 
-                stock: 4, 
-                image: "cloud.png", 
-                presentation: "100ml", 
-                notes: "White Sandalwood, Musk, Amber", 
-                sillage: "Moderado", 
-                status: "nuevo",
-                desc: "Fresca y luminosa con sándalo blanco, almizcle y ámbar."
-            },
-            { 
-                id: 4, 
-                name: "Nautica", 
-                brand: "Parfums de Marly", 
-                cat: "hombre", 
-                price: 195000, 
-                stock: 2, 
-                image: "nautica.png", 
-                presentation: "75ml", 
-                notes: "Sea Notes, Jasmine, Sandalwood", 
-                sillage: "Intenso", 
-                status: "normal",
-                desc: "Marina y fresca con notas oceánicas, jazmín y sándalo."
-            },
-            { 
-                id: 5, 
-                name: "Khamrah", 
-                brand: "Lattafa", 
-                cat: "unisex", 
-                price: 120000, 
-                stock: 8, 
-                image: "khamrah.png", 
-                presentation: "100ml", 
-                notes: "Cinnamon, Nutmeg, Amberwood", 
-                sillage: "Intenso", 
-                status: "bestseller",
-                desc: "Oriental especiada con canela, nuez moscada y madera de ámbar."
-            }
-        ];
-
-        // ==========================================
-        // INICIALIZACIÓN DE DATOS
-        // ==========================================
-        
-        // Cargar productos desde localStorage o usar defaults (solo primera vez)
         let products = [];
-        const storedProducts = localStorage.getItem('ezentia_products');
-        
-        if (storedProducts) {
-            // Si hay datos guardados, usarlos
-            products = JSON.parse(storedProducts);
-        } else {
-            // Primera vez: usar defaults y guardar
-            products = JSON.parse(JSON.stringify(defaultProducts));
-            localStorage.setItem('ezentia_products', JSON.stringify(products));
+        let sales = [];
+
+        // ==========================================
+        // FUNCIONES DE SINCRONIZACIÓN CON SUPABASE
+        // ==========================================
+
+        function showSyncStatus(message, type = 'syncing') {
+            const indicator = document.getElementById('syncStatus');
+            if (!indicator) return;
+            
+            indicator.style.display = 'inline-flex';
+            indicator.className = `sync-indicator ${type}`;
+            
+            const icon = type === 'syncing' ? 
+                '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>' :
+                type === 'error' ?
+                '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>' :
+                '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+            
+            indicator.innerHTML = `${icon}<span>${message}</span>`;
+            
+            if (type !== 'syncing') {
+                setTimeout(() => {
+                    indicator.style.display = 'none';
+                }, 3000);
+            }
         }
 
-        // Cargar ventas desde localStorage (siempre preservar)
-        let sales = [];
-        const storedSales = localStorage.getItem('ezentia_sales');
-        
-        if (storedSales) {
-            sales = JSON.parse(storedSales);
+        // Cargar productos desde Supabase
+        async function loadProductsFromCloud() {
+            if (!supabaseClient) {
+                console.log('Supabase no disponible, usando localStorage');
+                loadFromLocalStorage();
+                return;
+            }
+
+            showSyncStatus('Cargando productos...', 'syncing');
+            
+            try {
+                const { data, error } = await supabaseClient
+                    .from('products')
+                    .select('*')
+                    .order('id', { ascending: true });
+                
+                if (error) throw error;
+                
+                if (data && data.length > 0) {
+                    products = data.map(p => ({
+                        id: p.id,
+                        name: p.name,
+                        brand: p.brand,
+                        cat: p.cat,
+                        price: p.price,
+                        stock: p.stock,
+                        image: p.image,
+                        presentation: p.presentation,
+                        notes: p.notes,
+                        sillage: p.sillage,
+                        status: p.status,
+                        desc: p.desc
+                    }));
+                    
+                    localStorage.setItem('ezentia_products', JSON.stringify(products));
+                    showSyncStatus('Sincronizado con la nube', 'success');
+                } else {
+                    loadFromLocalStorage();
+                }
+            } catch (err) {
+                console.error('Error cargando productos:', err);
+                showSyncStatus('Error de conexión, usando local', 'error');
+                loadFromLocalStorage();
+            }
         }
-        // Si no hay ventas guardadas, iniciar vacío (no borrar nada)
+
+        // Cargar ventas desde Supabase
+        async function loadSalesFromCloud() {
+            if (!supabaseClient) {
+                loadSalesFromLocal();
+                return;
+            }
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('sales')
+                    .select('*')
+                    .order('id', { ascending: false });
+                
+                if (error) throw error;
+                
+                if (data && data.length > 0) {
+                    sales = data.map(s => ({
+                        id: s.id,
+                        client: s.client,
+                        productId: s.product_id,
+                        productName: s.product_name,
+                        quantity: s.quantity,
+                        total: s.total,
+                        date: s.date,
+                        status: s.status
+                    }));
+                    
+                    localStorage.setItem('ezentia_sales', JSON.stringify(sales));
+                } else {
+                    loadSalesFromLocal();
+                }
+            } catch (err) {
+                console.error('Error cargando ventas:', err);
+                loadSalesFromLocal();
+            }
+        }
+
+        function loadFromLocalStorage() {
+            const stored = localStorage.getItem('ezentia_products');
+            if (stored) {
+                products = JSON.parse(stored);
+            }
+        }
+
+        function loadSalesFromLocal() {
+            const stored = localStorage.getItem('ezentia_sales');
+            if (stored) {
+                sales = JSON.parse(stored);
+            }
+        }
+
+        // Guardar producto en Supabase
+        async function saveProductToCloud(product) {
+            if (!supabaseClient) return false;
+            
+            try {
+                const { data, error } = await supabaseClient
+                    .from('products')
+                    .upsert([{
+                        id: product.id,
+                        name: product.name,
+                        brand: product.brand,
+                        cat: product.cat,
+                        price: product.price,
+                        stock: product.stock,
+                        image: product.image,
+                        presentation: product.presentation,
+                        notes: product.notes,
+                        sillage: product.sillage,
+                        status: product.status,
+                        desc: product.desc
+                    }], { onConflict: 'id' });
+                
+                if (error) throw error;
+                return true;
+            } catch (err) {
+                console.error('Error guardando producto:', err);
+                return false;
+            }
+        }
+
+        // Eliminar producto de Supabase
+        async function deleteProductFromCloud(id) {
+            if (!supabaseClient) return false;
+            
+            try {
+                const { error } = await supabaseClient
+                    .from('products')
+                    .delete()
+                    .eq('id', id);
+                
+                if (error) throw error;
+                return true;
+            } catch (err) {
+                console.error('Error eliminando producto:', err);
+                return false;
+            }
+        }
+
+        // Guardar venta en Supabase
+        async function saveSaleToCloud(sale) {
+            if (!supabaseClient) return false;
+            
+            try {
+                const { data, error } = await supabaseClient
+                    .from('sales')
+                    .insert([{
+                        id: sale.id,
+                        client: sale.client,
+                        product_id: sale.productId,
+                        product_name: sale.productName,
+                        quantity: sale.quantity,
+                        total: sale.total,
+                        date: sale.date,
+                        status: sale.status
+                    }]);
+                
+                if (error) throw error;
+                return true;
+            } catch (err) {
+                console.error('Error guardando venta:', err);
+                return false;
+            }
+        }
+
+        // Actualizar stock en Supabase
+        async function updateStockInCloud(productId, newStock) {
+            if (!supabaseClient) return false;
+            
+            try {
+                const { error } = await supabaseClient
+                    .from('products')
+                    .update({ stock: newStock })
+                    .eq('id', productId);
+                
+                if (error) throw error;
+                return true;
+            } catch (err) {
+                console.error('Error actualizando stock:', err);
+                return false;
+            }
+        }
+
+        // Eliminar venta de Supabase
+        async function deleteSaleFromCloud(id) {
+            if (!supabaseClient) return false;
+            
+            try {
+                const { error } = await supabaseClient
+                    .from('sales')
+                    .delete()
+                    .eq('id', id);
+                
+                if (error) throw error;
+                return true;
+            } catch (err) {
+                console.error('Error eliminando venta:', err);
+                return false;
+            }
+        }
 
         // ==========================================
         // FUNCIONES DE AUTENTICACIÓN
@@ -1490,24 +1636,16 @@
             }
         }
 
-        function showAdminPanel() {
+        async function showAdminPanel() {
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('adminPanel').classList.remove('hidden');
+            
+            // Cargar datos desde la nube o local
+            await loadProductsFromCloud();
+            await loadSalesFromCloud();
+            
             updateStats();
             renderProducts();
-        }
-
-        // ==========================================
-        // FUNCIONES DE PERSISTENCIA
-        // ==========================================
-
-        function saveData() {
-            // Guardar en localStorage
-            localStorage.setItem('ezentia_products', JSON.stringify(products));
-            localStorage.setItem('ezentia_sales', JSON.stringify(sales));
-            
-            // Actualizar estadísticas
-            updateStats();
         }
 
         // ==========================================
@@ -1607,7 +1745,7 @@
             return colors[status] || '#706f6f';
         }
 
-        function saveProduct(e) {
+        async function saveProduct(e) {
             e.preventDefault();
 
             const id = document.getElementById('productForm').dataset.editId;
@@ -1626,24 +1764,31 @@
                 desc: document.getElementById('productDesc').value
             };
 
+            showSyncStatus('Guardando...', 'syncing');
+
             if (id) {
-                // Editar existente
                 const index = products.findIndex(p => p.id == id);
                 if (index > -1) {
                     products[index] = product;
                 }
             } else {
-                // Nuevo producto
                 products.push(product);
             }
 
-            // Guardar en localStorage
-            saveData();
+            localStorage.setItem('ezentia_products', JSON.stringify(products));
+
+            const saved = await saveProductToCloud(product);
+            
+            if (saved) {
+                showSyncStatus('Guardado en la nube ✓', 'success');
+            } else {
+                showSyncStatus('Guardado localmente', 'error');
+            }
             
             clearForm();
             renderProducts();
+            updateStats();
 
-            // Feedback visual
             const btn = e.target.querySelector('.btn-primary');
             const originalText = btn.innerHTML;
             btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> Guardado Exitosamente';
@@ -1683,15 +1828,27 @@
             document.getElementById('productStatus').value = product.status || 'normal';
             document.getElementById('productDesc').value = product.desc || '';
 
-            // Scroll al formulario
-            document.getElementById('productForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            document.getElementById('productForm').            scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
-        function deleteProduct(id) {
+        async function deleteProduct(id) {
             if (!confirm('¿Está seguro de eliminar este producto? Esta acción no se puede deshacer.')) return;
+            
+            showSyncStatus('Eliminando...', 'syncing');
+            
             products = products.filter(p => p.id !== id);
-            saveData();
+            localStorage.setItem('ezentia_products', JSON.stringify(products));
+            
+            const deleted = await deleteProductFromCloud(id);
+            
+            if (deleted) {
+                showSyncStatus('Eliminado de la nube ✓', 'success');
+            } else {
+                showSyncStatus('Eliminado localmente', 'error');
+            }
+            
             renderProducts();
+            updateStats();
         }
 
         function clearForm() {
@@ -1714,7 +1871,7 @@
             ).join('');
         }
 
-        function saveSale(e) {
+        async function saveSale(e) {
             e.preventDefault();
 
             const productId = parseInt(document.getElementById('saleProduct').value);
@@ -1737,17 +1894,28 @@
                 status: document.getElementById('saleStatus').value
             };
 
-            sales.push(sale);
-            product.stock -= quantity;
+            showSyncStatus('Registrando venta...', 'syncing');
 
-            // Guardar TODO en localStorage
-            saveData();
+            product.stock -= quantity;
+            sales.push(sale);
+            
+            localStorage.setItem('ezentia_sales', JSON.stringify(sales));
+            localStorage.setItem('ezentia_products', JSON.stringify(products));
+
+            const saleSaved = await saveSaleToCloud(sale);
+            const stockUpdated = await updateStockInCloud(productId, product.stock);
+
+            if (saleSaved && stockUpdated) {
+                showSyncStatus('Venta registrada en la nube ✓', 'success');
+            } else {
+                showSyncStatus('Venta guardada localmente', 'error');
+            }
             
             document.getElementById('saleForm').reset();
             renderAllSales();
             populateProductSelect();
+            updateStats();
 
-            // Feedback visual
             const btn = e.target.querySelector('.btn-success');
             const originalText = btn.innerHTML;
             btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> Venta Registrada';
@@ -1778,20 +1946,44 @@
             `).join('');
         }
 
-        function completeSale(id) {
+        async function completeSale(id) {
             const sale = sales.find(s => s.id === id);
             if (sale) {
-                sale.status = '                completado';
-                saveData();
+                sale.status = 'completado';
+                localStorage.setItem('ezentia_sales', JSON.stringify(sales));
+                
+                if (supabaseClient) {
+                    try {
+                        await supabaseClient
+                            .from('sales')
+                            .update({ status: 'completado' })
+                            .eq('id', id);
+                    } catch (err) {
+                        console.error('Error actualizando estado:', err);
+                    }
+                }
+                
                 renderAllSales();
                 updateStats();
             }
         }
 
-        function deleteSale(id) {
+        async function deleteSale(id) {
             if (!confirm('¿Está seguro de eliminar esta venta?')) return;
+            
+            showSyncStatus('Eliminando venta...', 'syncing');
+            
             sales = sales.filter(s => s.id !== id);
-            saveData();
+            localStorage.setItem('ezentia_sales', JSON.stringify(sales));
+            
+            const deleted = await deleteSaleFromCloud(id);
+            
+            if (deleted) {
+                showSyncStatus('Venta eliminada ✓', 'success');
+            } else {
+                showSyncStatus('Eliminada localmente', 'error');
+            }
+            
             renderAllSales();
             updateStats();
         }
@@ -1810,7 +2002,7 @@
         }
 
         // ==========================================
-        // MENÚ MÓVIL MEJORADO (IGUAL QUE INDEX)
+        // MENÚ MÓVIL MEJORADO
         // ==========================================
 
         const menuToggle = document.getElementById('menuToggle');
@@ -1860,7 +2052,6 @@
             mobileMenuOverlay.addEventListener('click', closeMobileMenu);
         }
 
-        // Cerrar menú al hacer click en links
         if (navLinks) {
             const links = navLinks.querySelectorAll('a');
             links.forEach(link => {
@@ -1870,7 +2061,6 @@
             });
         }
 
-        // Cerrar con Escape
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeMobileMenu();
@@ -1882,7 +2072,6 @@
         // ==========================================
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Si hay sesión activa, mostrar panel
             if (currentUser) {
                 showAdminPanel();
             }
