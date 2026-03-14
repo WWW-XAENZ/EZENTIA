@@ -240,6 +240,7 @@
             text-decoration: none;
             z-index: 1002;
             transition: transform 0.3s ease;
+            cursor: pointer;
         }
 
         .logo:hover {
@@ -2051,10 +2052,9 @@
         }
     </style>
     
-        <!-- Supabase SDK para sincronización automática -->
+    <!-- Supabase SDK para sincronización automática -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
 
-<base target="_blank">
 </head>
 <body>
     <!-- Overlay para menú móvil -->
@@ -2063,7 +2063,7 @@
     <!-- Header -->
     <header id="header">
         <nav>
-            <a href="index.html" class="logo" id="adminLogo" onclick="return handleLogoClick(event)">
+            <a href="index.html" class="logo" id="adminLogo">
                 <img src="ezentia.png" alt="EZENTIA" class="logo-img" width="42" height="42">
             </a>
             
@@ -2116,7 +2116,7 @@
                 <div class="splash-particle"></div>
                 <div class="splash-particle"></div>
                 <div class="splash-ring splash-ring-1"></div>
-                <div class="splash-ring splash-ring-2"></div>
+                <div class="                <div class="splash-ring splash-ring-2"></div>
                 <div class="splash-ring splash-ring-3"></div>
                 <img src="ezentiaWhite.png" alt="EZENTIA" class="hero-logo" width="360" height="auto" loading="eager">
             </div>
@@ -2124,7 +2124,7 @@
             <h1 class="hero-title">EZENTIA</h1>
             <p class="hero-subtitle">Donde cada fragancia cuenta una historia</p>
             <p class="hero-description">Fragancias exclusivas 100% originales que celebran tu esencia única. Lujo, elegancia y sofisticación en cada gota.</p>
-                       <div class="hero-buttons">
+            <div class="hero-buttons">
                 <a href="productos.html" class="hero-btn hero-btn-primary">Explorar Colección</a>
                 <a href="nosotros.html" class="hero-btn hero-btn-secondary">Nuestra Historia</a>
             </div>
@@ -2875,50 +2875,28 @@
             });
         }
 
-                // ===== ADMIN ACCESS (5 clicks) =====
-        // Solo funciona si NO estamos en index.html (para evitar duplicación de página)
+        // ===== ADMIN ACCESS (5 clicks) - CORREGIDO =====
         const adminLogo = document.getElementById('adminLogo');
-
         if (adminLogo) {
             let clickCount = 0;
             let clickTimer = null;
-
+            
             adminLogo.addEventListener('click', (e) => {
-                const isIndexPage = window.location.pathname.includes('index') || 
-                                   window.location.pathname === '/' || 
-                                   window.location.pathname.endsWith('/');
-
-                // Si estamos en index.html, no hacer nada (permitir navegación normal)
-                if (isIndexPage) {
-                    clickCount = 0; // Resetear contador
-                    return; // Salir sin prevenir default
-                }
-
-                // En otras páginas, activar el contador de 5 clicks
+                // Prevenir navegación normal del enlace
                 e.preventDefault();
-
+                
                 if (clickTimer) clearTimeout(clickTimer);
-
+                
                 clickCount++;
-                console.log(`Click ${clickCount}/5 en logo para acceso admin`);
-
-                // Feedback visual sutil (opcional)
-                if (clickCount === 3) {
-                    adminLogo.style.transform = 'scale(1.1)';
-                    setTimeout(() => adminLogo.style.transform = '', 200);
-                }
-
                 clickTimer = setTimeout(() => { 
                     clickCount = 0; 
                 }, 1000);
-
+                
                 if (clickCount >= 5) { 
                     clickCount = 0; 
-                    clearTimeout(clickTimer);
+                    // Navegar en la misma ventana (sin target="_blank")
                     window.location.href = 'admin.html'; 
                 }
-            });
-        }
             });
         }
 
