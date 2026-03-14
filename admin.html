@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>EZENTIA - Panel de Administración</title>
     <link rel="icon" type="image/png" href="ezentia.png">
 
@@ -38,7 +38,7 @@
             --white: #ffffff;
             
             --glass-bg: rgba(66, 56, 54, 0.25);
-            --glass-bg-solid: rgba(66, 56, 54, 0.85);
+            --glass-bg-solid: rgba(66, 56, 54, 0.98);
             --glass-border: rgba(233, 156, 50, 0.25);
             --glass-blur: blur(20px);
             --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
@@ -53,7 +53,7 @@
             --success: #27ae60;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html { scroll-behavior: smooth; }
 
         body {
@@ -65,12 +65,13 @@
             min-height: 100vh;
         }
 
-        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg-primary); }
         ::-webkit-scrollbar-thumb { background: linear-gradient(to bottom, var(--yellow-dark), var(--yellow-primary)); border-radius: 10px; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes borderGlow { 0%, 100% { border-color: rgba(233, 156, 50, 0.2); } 50% { border-color: rgba(233, 156, 50, 0.6); } }
 
         /* fondo con imagen de la pagina */
@@ -98,7 +99,7 @@
             z-index: -1;
         }
 
-        /* header */
+        /* ===== HEADER ===== */
         header {
             position: fixed;
             top: 0;
@@ -111,6 +112,7 @@
             -webkit-backdrop-filter: var(--glass-blur);
             border-bottom: 1px solid var(--glass-border);
             box-shadow: var(--glass-shadow);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         nav {
@@ -127,7 +129,11 @@
             align-items: center;
             gap: 12px;
             text-decoration: none;
+            z-index: 1002;
+            transition: transform 0.3s ease;
         }
+
+        .logo:hover { transform: scale(1.05); }
 
         .logo-img {
             height: 42px;
@@ -138,7 +144,6 @@
 
         .logo:hover .logo-img { 
             filter: drop-shadow(0 0 20px rgba(233, 156, 50, 0.6));
-            transform: scale(1.05);
         }
 
         .nav-links {
@@ -157,6 +162,7 @@
             align-items: center;
             gap: 15px;
             margin-left: auto;
+            z-index: 1002;
         }
 
         .nav-links a {
@@ -168,6 +174,7 @@
             position: relative;
             transition: all 0.3s ease;
             padding: 5px 0;
+            white-space: nowrap;
         }
 
         .nav-links a::before {
@@ -235,6 +242,68 @@
             height: 16px;
         }
 
+        /* ===== MENU TOGGLE ===== */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            padding: 12px;
+            width: 48px;
+            height: 48px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .menu-toggle:hover {
+            border-color: var(--yellow-primary);
+            background: rgba(233, 156, 50, 0.15);
+        }
+
+        .menu-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .menu-toggle span {
+            width: 22px;
+            height: 2px;
+            background: var(--yellow-primary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: block;
+            border-radius: 1px;
+            transform-origin: center;
+        }
+
+        .menu-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .menu-toggle.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+        .menu-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+        /* Overlay para menú móvil */
+        .mobile-menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 998;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .mobile-menu-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
         /* contenido principal */
         .main-content {
             padding-top: 100px;
@@ -299,6 +368,7 @@
             backdrop-filter: var(--glass-blur);
             border-radius: 10px 10px 0 0;
             padding: 0 1rem;
+            overflow-x: auto;
         }
 
         .tab-btn {
@@ -315,6 +385,7 @@
             position: relative;
             border-bottom: 3px solid transparent;
             margin-bottom: -1px;
+            white-space: nowrap;
         }
 
         .tab-btn:hover {
@@ -762,76 +833,6 @@
             text-align: left;
         }
 
-        /* responsive */
-        .menu-toggle {
-            display: none;
-            flex-direction: column;
-            gap: 6px;
-            cursor: pointer;
-            padding: 10px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 5px;
-        }
-
-        .menu-toggle span {
-            width: 24px;
-            height: 1px;
-            background: var(--yellow-primary);
-            transition: all 0.3s ease;
-            display: block;
-        }
-
-        @media (max-width: 1024px) {
-            .nav-links {
-                position: static;
-                transform: none;
-                gap: 25px;
-            }
-            
-            .page-title { font-size: 38px; }
-        }
-
-        @media (max-width: 768px) {
-            header { padding: 15px 20px; position: relative; z-index: 999; }
-            
-            /* Reset nav para móvil */
-            nav { position: static; }
-            
-            .nav-links { 
-                display: none; 
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: var(--glass-bg-solid);
-                backdrop-filter: blur(20px);
-                flex-direction: column;
-                padding: 25px;
-                gap: 20px;
-                border-bottom: 1px solid var(--glass-border);
-                transform: none;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-                z-index: 1000;
-            }
-            
-            .nav-links.active { display: flex; }
-            
-            .menu-toggle { display: flex; }
-            
-            .menu-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
-            .menu-toggle.active span:nth-child(2) { opacity: 0; }
-            .menu-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
-            
-            .page-title { font-size: 32px; }
-            .form-grid { grid-template-columns: 1fr; }
-            .stats-grid { grid-template-columns: 1fr; }
-            .tabs { overflow-x: auto; padding: 0; }
-            .tab-btn { padding: 1rem 1.5rem; white-space: nowrap; }
-            .login-box { padding: 2.5rem 1.5rem; }
-        }
-
         .hidden { display: none !important; }
 
         /* indicador de estado */
@@ -855,6 +856,161 @@
             color: var(--success);
             border: 1px solid rgba(39, 174, 96, 0.3);
         }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1200px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 1024px) {
+            .nav-links {
+                position: static;
+                transform: none;
+                gap: 25px;
+            }
+            
+            .page-title { font-size: 38px; }
+        }
+
+        @media (max-width: 768px) {
+            /* Header móvil */
+            header { 
+                padding: 12px 15px; 
+                position: fixed;
+            }
+            
+            nav { position: relative; }
+
+            /* Ocultar nav-links de escritorio */
+            .nav-links { 
+                display: none;
+                position: static;
+                transform: none;
+                left: auto;
+            }
+
+            /* Mostrar menú móvil cuando está activo */
+            .nav-links.mobile-active {
+                display: flex;
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                width: 100%;
+                transform: none;
+                background: rgba(66, 56, 54, 0.98);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 20px 0;
+                gap: 0;
+                border-bottom: 2px solid var(--yellow-primary);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+                z-index: 999;
+                max-height: calc(100vh - 70px);
+                overflow-y: auto;
+                animation: slideDown 0.3s ease-out;
+            }
+
+            .nav-links.mobile-active li {
+                width: 100%;
+                list-style: none;
+            }
+
+            .nav-links.mobile-active li a {
+                display: block;
+                padding: 16px 25px;
+                font-size: 14px;
+                letter-spacing: 3px;
+                text-align: center;
+                color: var(--text-primary);
+                text-decoration: none;
+                transition: all 0.3s ease;
+                border-bottom: 1px solid rgba(233, 156, 50, 0.1);
+            }
+
+            .nav-links.mobile-active li:last-child a {
+                border-bottom: none;
+            }
+
+            .nav-links.mobile-active li a:hover,
+            .nav-links.mobile-active li a.active {
+                background: rgba(233, 156, 50, 0.15);
+                color: var(--yellow-primary);
+            }
+
+            .nav-links.mobile-active a::before {
+                display: none;
+            }
+
+            .nav-links.mobile-active a.panel-link {
+                margin: 10px 20px 15px;
+                border: 1px solid var(--yellow-primary);
+                padding: 12px !important;
+                background: rgba(233, 156, 50, 0.15);
+                border-radius: 4px;
+                display: block;
+            }
+
+            /* Mostrar menú hamburguesa */
+            .menu-toggle { display: flex; }
+
+            /* Ajustes logo */
+            .logo-img { height: 32px; }
+
+            /* Main content ajustes */
+            .main-content { padding-top: 70px; }
+            .container { padding: 1rem; }
+            .page-title { font-size: 32px; }
+            .page-header { padding: 1rem 0; margin-bottom: 2rem; }
+
+            /* Stats grid */
+            .stats-grid { grid-template-columns: 1fr; gap: 1rem; }
+            .stat-card { padding: 1.5rem; }
+            .stat-value { font-size: 2rem; }
+
+            /* Tabs */
+            .tabs { padding: 0; }
+            .tab-btn { padding: 1rem 1.5rem; font-size: 11px; }
+
+            /* Glass cards */
+            .glass-card { padding: 1.5rem; }
+            .glass-card h2 { font-size: 1.2rem; }
+
+            /* Form grid */
+            .form-grid { grid-template-columns: 1fr; gap: 1rem; }
+
+            /* Tablas */
+            .table-container { overflow-x: auto; }
+            th, td { padding: 0.8rem; font-size: 13px; }
+            .product-image { width: 50px; height: 50px; }
+            .action-btn { padding: 6px 12px; font-size: 10px; margin-right: 0.25rem; }
+
+            /* Login */
+            .login-box { padding: 2.5rem 1.5rem; }
+            .login-title { font-size: 24px; }
+        }
+
+        @media (max-width: 480px) {
+            header { padding: 10px 12px; }
+            .nav-links.mobile-active { top: 60px; }
+            .nav-links.mobile-active a { font-size: 13px; padding: 14px 15px; }
+            .page-title { font-size: 28px; }
+            .menu-toggle { width: 40px; height: 40px; padding: 8px; }
+            .menu-toggle span { width: 20px; }
+            .logout-btn { padding: 8px 12px; font-size: 11px; }
+            .logout-btn svg { width: 14px; height: 14px; }
+        }
+
+        /* Reducir motion para accesibilidad */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -873,7 +1029,7 @@
                 <div class="form-group">
                     <label>Contraseña</label>
                     <input type="password" id="password" required placeholder="Ingresa la contraseña">
-                                </div>
+                </div>
                 <button type="submit" class="btn btn-primary" style="width: 100%;">
                     Ingresar al Sistema
                 </button>
@@ -883,10 +1039,13 @@
 
     <!-- panel admin -->
     <div id="adminPanel" class="hidden">
+        <!-- Overlay para menú móvil -->
+        <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
         <header>
             <nav>
                 <a href="index.html" class="logo">
-                    <img src="ezentia.png" alt="EZENTIA" class="logo-img">
+                    <img src="ezentia.png" alt="EZENTIA" class="logo-img" width="42" height="42">
                 </a>
                 <ul class="nav-links" id="navLinks">
                     <li><a href="index.html">Inicio</a></li>
@@ -904,11 +1063,11 @@
                         </svg>
                         Cerrar Sesión
                     </button>
-                </div>
-                <div class="menu-toggle" id="menuToggle" onclick="toggleMenu()">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                    <div class="menu-toggle" id="menuToggle" aria-label="Menú" aria-expanded="false" role="button" tabindex="0">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
                 </div>
             </nav>
         </header>
@@ -1081,7 +1240,7 @@
                                 <label>Descripción del Producto</label>
                                 <textarea id="productDesc" placeholder="Describe la fragancia, sus notas, carácter, ocasiones de uso..."></textarea>
                             </div>
-                            <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                            <div style="margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
                                 <button type="submit" class="btn btn-primary">Guardar Producto</button>
                                 <button type="button" class="btn btn-secondary" onclick="clearForm()">Limpiar Formulario</button>
                             </div>
@@ -1622,7 +1781,7 @@
         function completeSale(id) {
             const sale = sales.find(s => s.id === id);
             if (sale) {
-                sale.status = 'completado';
+                sale.status = '                completado';
                 saveData();
                 renderAllSales();
                 updateStats();
@@ -1651,20 +1810,81 @@
         }
 
         // ==========================================
-        // UTILIDADES
+        // MENÚ MÓVIL MEJORADO (IGUAL QUE INDEX)
         // ==========================================
 
-        function toggleMenu() {
-            document.getElementById('navLinks').classList.toggle('active');
-            document.getElementById('menuToggle').classList.toggle('active');
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+
+        function toggleMobileMenu() {
+            if (!navLinks || !menuToggle) return;
+            
+            const isActive = navLinks.classList.contains('mobile-active');
+            
+            if (isActive) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
         }
 
-        document.addEventListener('click', function(e) {
-            const nav = document.getElementById('navLinks');
-            const toggle = document.getElementById('menuToggle');
-            if (!nav.contains(e.target) && !toggle.contains(e.target)) {
-                nav.classList.remove('active');
-                toggle.classList.remove('active');
+        function openMobileMenu() {
+            if (!navLinks || !menuToggle || !mobileMenuOverlay) return;
+            
+            navLinks.classList.add('mobile-active');
+            menuToggle.classList.add('active');
+            menuToggle.setAttribute('aria-expanded', 'true');
+            mobileMenuOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileMenu() {
+            if (!navLinks || !menuToggle || !mobileMenuOverlay) return;
+            
+            navLinks.classList.remove('mobile-active');
+            menuToggle.classList.remove('active');
+            menuToggle.setAttribute('aria-expanded', 'false');
+            mobileMenuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        if (menuToggle) {
+            menuToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleMobileMenu();
+            });
+        }
+
+        if (mobileMenuOverlay) {
+            mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+        }
+
+        // Cerrar menú al hacer click en links
+        if (navLinks) {
+            const links = navLinks.querySelectorAll('a');
+            links.forEach(link => {
+                link.addEventListener('click', () => {
+                    closeMobileMenu();
+                });
+            });
+        }
+
+        // Cerrar con Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeMobileMenu();
+            }
+        });
+
+        // ==========================================
+        // INICIALIZACIÓN
+        // ==========================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Si hay sesión activa, mostrar panel
+            if (currentUser) {
+                showAdminPanel();
             }
         });
     </script>

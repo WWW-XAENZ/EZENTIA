@@ -1,8 +1,8 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Contacto | EZENTIA Perfumería Luxury</title>
     <meta name="description" content="Contáctanos para asesoría personalizada en fragancias luxury. WhatsApp, email y ubicación en El Santuario, Antioquia.">
     <meta name="keywords" content="contacto perfumería, fragancias Colombia, Lattafa Colombia, Nautica Colombia">
@@ -25,7 +25,6 @@
         }
 
         :root {
-            /* Colores principales según manual de marca */
             --brown-dark: #423836;
             --brown-rgb: 66, 56, 54;
             --gray-light: #c1bfbf;
@@ -33,23 +32,19 @@
             --yellow-primary: #e99c32;
             --yellow-light: #f5b85a;
             --yellow-dark: #c47d20;
-            
-            /* Aplicaciones */
             --bg-primary: #423836;
             --bg-secondary: #2a2423;
             --text-primary: #c1bfbf;
             --text-secondary: #706f6f;
             --accent: #e99c32;
             --white: #ffffff;
-            
-            /* Glass effect actualizado */
             --glass-bg: rgba(66, 56, 54, 0.45);
             --glass-border: rgba(233, 156, 50, 0.18);
             --glass-blur: blur(20px);
             --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html { scroll-behavior: smooth; }
 
         body {
@@ -60,12 +55,12 @@
             overflow-x: hidden;
         }
 
-        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg-primary); }
         ::-webkit-scrollbar-thumb { background: linear-gradient(to bottom, var(--yellow-dark), var(--yellow-primary)); border-radius: 10px; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeInLeft { from { opacity: 0; transform: translateX(-60px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes fadeInRight { from { opacity: 0; transform: translateX(60px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-18px); } }
@@ -74,26 +69,30 @@
         @keyframes borderGlow { 0%, 100% { border-color: rgba(233, 156, 50, 0.2); } 50% { border-color: rgba(233, 156, 50, 0.5); } }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
         .particles-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
         .particle { position: absolute; width: 3px; height: 3px; background: var(--yellow-primary); border-radius: 50%; animation: particleFloat linear infinite; opacity: 0; }
 
         /* ===== HEADER ===== */
-        header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 18px 50px; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 18px 50px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); will-change: transform, background; }
         header.scrolled { background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border-bottom: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); padding: 12px 50px; }
+        
         nav { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; position: relative; }
-        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; z-index: 1002; transition: transform 0.3s ease; }
+        .logo:hover { transform: scale(1.05); }
         .logo-img { height: 42px; width: auto; filter: drop-shadow(0 0 10px rgba(233, 156, 50, 0.3)); transition: filter 0.3s ease; }
         .logo:hover .logo-img { filter: drop-shadow(0 0 20px rgba(233, 156, 50, 0.6)); }
 
         .nav-links { display: flex; gap: 40px; list-style: none; align-items: center; justify-content: center; position: absolute; left: 50%; transform: translateX(-50%); }
-        .nav-right { display: flex; align-items: center; gap: 15px; margin-left: auto; }
-        .nav-links a { color: var(--text-primary); text-decoration: none; font-size: 13px; letter-spacing: 2.5px; text-transform: uppercase; position: relative; transition: color 0.3s ease; padding: 5px 0; }
+        .nav-right { display: flex; align-items: center; gap: 15px; margin-left: auto; z-index: 1002; }
+        
+        .nav-links a { color: var(--text-primary); text-decoration: none; font-size: 13px; letter-spacing: 2.5px; text-transform: uppercase; position: relative; transition: color 0.3s ease; padding: 5px 0; white-space: nowrap; }
         .nav-links a::before { content: ''; position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--yellow-primary), transparent); transition: width 0.4s ease; }
         .nav-links a:hover, .nav-links a.active { color: var(--yellow-primary); }
         .nav-links a:hover::before, .nav-links a.active::before { width: 100%; }
         
-        /* Panel link for admin */
         .nav-links a.panel-link {
             color: var(--yellow-primary) !important;
             font-weight: bold;
@@ -108,14 +107,20 @@
             box-shadow: 0 0 15px rgba(233, 156, 50, 0.3);
         }
 
-        .cart-icon { position: relative; cursor: pointer; display: flex; align-items: center; padding: 8px; background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); transition: all 0.3s ease; }
-        .cart-icon:hover { border-color: var(--yellow-primary); background: rgba(255, 254, 253, 0.1); }
+        .cart-icon { position: relative; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 10px; background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 50%; transition: all 0.3s ease; width: 44px; height: 44px; }
+        .cart-icon:hover { border-color: var(--yellow-primary); background: rgba(233, 156, 50, 0.15); transform: scale(1.1); }
         .cart-icon svg { width: 20px; height: 20px; fill: var(--text-primary); transition: fill 0.3s ease; }
         .cart-icon:hover svg { fill: var(--yellow-primary); }
-        .cart-count { position: absolute; top: -5px; right: -5px; background: linear-gradient(135deg, var(--yellow-dark), var(--yellow-primary)); color: var(--bg-primary); font-size: 10px; min-width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+        .cart-count { position: absolute; top: -4px; right: -4px; background: linear-gradient(135deg, var(--yellow-dark), var(--yellow-primary)); color: var(--bg-primary); font-size: 10px; min-width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; border: 2px solid var(--bg-primary); transition: transform 0.3s ease; }
+        .cart-icon:hover .cart-count { transform: scale(1.1); }
 
-        .menu-toggle { display: none; flex-direction: column; gap: 6px; cursor: pointer; padding: 8px; background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); }
-        .menu-toggle span { width: 22px; height: 1px; background: var(--yellow-primary); transition: all 0.3s ease; display: block; }
+        .menu-toggle { display: none; flex-direction: column; justify-content: center; align-items: center; gap: 5px; cursor: pointer; padding: 12px; width: 48px; height: 48px; background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 12px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); -webkit-tap-highlight-color: transparent; }
+        .menu-toggle:hover { border-color: var(--yellow-primary); background: rgba(233, 156, 50, 0.15); }
+        .menu-toggle:active { transform: scale(0.95); }
+        .menu-toggle span { width: 22px; height: 2px; background: var(--yellow-primary); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: block; border-radius: 1px; transform-origin: center; }
+        .menu-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .menu-toggle.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+        .menu-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
 
         /* ===== HERO ===== */
         .hero { padding: 180px 50px 120px; background: var(--bg-primary); text-align: center; position: relative; overflow: hidden; }
@@ -191,64 +196,74 @@
         .footer-title::after { content: ''; position: absolute; bottom: 0; left: 0; width: 30px; height: 1px; background: var(--yellow-primary); }
         .footer-links { list-style: none; }
         .footer-links li { margin-bottom: 12px; }
-        .footer-links a { color: var(--text-secondary); text-decoration: none; font-size: 15px; transition: all 0.3s ease; }
-        .footer-links a:hover { color: var(--yellow-primary); padding-left: 5px; }
+        .footer-links a { color: var(--text-secondary); text-decoration: none; font-size: 15px; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px; }
+        .footer-links a::before { content: ''; width: 4px; height: 4px; background: var(--yellow-primary); transform: rotate(45deg); opacity: 0; transition: all 0.3s ease; flex-shrink: 0; }
+        .footer-links a:hover { color: var(--yellow-primary); }
+        .footer-links a:hover::before { opacity: 1; }
         .footer-social-links { display: flex; gap: 12px; }
         .footer-social-link { width: 44px; height: 44px; background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: center; color: var(--text-secondary); text-decoration: none; transition: all 0.3s ease; }
         .footer-social-link:hover { border-color: var(--yellow-primary); color: var(--yellow-primary); transform: translateY(-4px); box-shadow: 0 8px 20px rgba(233, 156, 50, 0.2); background: rgba(233, 156, 50, 0.1); }
 
         /* ===== CART MODAL ===== */
-        .cart-modal { display: none; position: fixed; top: 0; right: 0; width: 100%; max-width: 420px; height: 100vh; background: rgba(66, 56, 54, 0.95); backdrop-filter: blur(30px); border-left: 1px solid var(--glass-border); z-index: 2000; padding: 30px; overflow-y: auto; box-shadow: -20px 0 60px rgba(0, 0, 0, 0.6); }
-        .cart-modal.active { display: block; animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .cart-modal { display: none; position: fixed; top: 0; right: 0; width: 100%; max-width: 420px; height: 100vh; background: rgba(66, 56, 54, 0.98); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border-left: 1px solid var(--glass-border); z-index: 2000; padding: 30px; overflow-y: auto; box-shadow: -20px 0 60px rgba(0, 0, 0, 0.6); transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .cart-modal.active { display: block; transform: translateX(0); }
         .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--glass-border); }
         .cart-title { font-family: 'Hoefler Text', serif; font-size: 24px; color: var(--yellow-primary); }
-        .cart-close { background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-secondary); font-size: 20px; cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; }
-        .cart-close:hover { border-color: var(--yellow-primary); color: var(--yellow-primary); }
+        .cart-close { background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-secondary); font-size: 24px; cursor: pointer; transition: all 0.3s ease; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+        .cart-close:hover { border-color: var(--yellow-primary); color: var(--yellow-primary); transform: rotate(90deg); }
         .cart-items { margin-bottom: 30px; }
-        .cart-item { display: flex; gap: 15px; padding: 15px 0; border-bottom: 1px solid rgba(233, 156, 50, 0.08); }
-        .cart-item img { width: 70px; height: 70px; object-fit: contain; background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 8px; }
+        .cart-item { display: flex; gap: 15px; padding: 15px 0; border-bottom: 1px solid rgba(233, 156, 50, 0.08); animation: fadeInUp 0.3s ease; }
+        .cart-item img { width: 70px; height: 70px; object-fit: contain; background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 8px; border-radius: 4px; }
         .cart-item-info { flex: 1; }
         .cart-item-name { font-family: 'Hoefler Text', serif; font-size: 16px; margin-bottom: 5px; }
-        .cart-item-price { color: var(--yellow-primary); font-size: 14px; }
+        .cart-item-price { color: var(--yellow-primary); font-size: 14px; font-weight: 600; }
         .cart-item-quantity { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
-        .qty-btn { width: 28px; height: 28px; background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--yellow-primary); cursor: pointer; font-size: 16px; }
-        .qty-btn:hover { background: rgba(233, 156, 50, 0.2); border-color: var(--yellow-primary); }
-        .cart-item-remove { background: none; border: none; color: #e74c3c; cursor: pointer; font-size: 12px; text-decoration: underline; margin-top: 5px; }
+        .qty-btn { width: 32px; height: 32px; background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--yellow-primary); cursor: pointer; transition: all 0.3s ease; font-size: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .qty-btn:hover { background: rgba(233, 156, 50, 0.2); border-color: var(--yellow-primary); transform: scale(1.1); }
+        .cart-item-remove { background: none; border: none; color: #e74c3c; cursor: pointer; font-size: 12px; text-decoration: underline; margin-top: 5px; transition: color 0.3s ease; }
         .cart-item-remove:hover { color: #ff6b6b; }
         .cart-empty { text-align: center; padding: 60px 20px; color: var(--text-secondary); font-size: 18px; font-style: italic; }
         .cart-total { padding: 20px 0; border-top: 1px solid var(--glass-border); margin-top: 20px; }
         .cart-total-row { display: flex; justify-content: space-between; font-family: 'Hoefler Text', serif; font-size: 20px; margin-bottom: 20px; }
-        .cart-total-value { color: var(--yellow-primary); }
-        .cart-checkout-btn { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--yellow-dark), var(--yellow-primary)); border: none; color: var(--bg-primary); font-family: 'Hoefler Text', serif; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; }
-        .cart-checkout-btn:hover { background: linear-gradient(135deg, var(--yellow-primary), var(--yellow-light)); box-shadow: 0 5px 20px rgba(233, 156, 50, 0.4); }
-        .cart-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); z-index: 1999; }
-        .cart-overlay.active { display: block; }
-        .footer-bottom { max-width: 1200px; margin: 60px auto 0; padding-top: 30px; border-top: 1px solid rgba(233, 156, 50, 0.08); text-align: center; color: var(--text-secondary); font-size: 13px; }
+        .cart-total-value { color: var(--yellow-primary); font-weight: 600; }
+        .cart-checkout-btn { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--yellow-dark), var(--yellow-primary)); border: none; color: var(--bg-primary); font-family: 'Hoefler Text', serif; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.3s ease; border-radius: 4px; font-weight: 600; }
+        .cart-checkout-btn:hover { background: linear-gradient(135deg, var(--yellow-primary), var(--yellow-light)); box-shadow: 0 5px 20px rgba(233, 156, 50, 0.4); transform: translateY(-2px); }
+        .cart-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); z-index: 1999; opacity: 0; transition: opacity 0.3s ease; }
+        .cart-overlay.active { display: block; opacity: 1; }
+
+        /* Overlay para menú móvil */
+        .mobile-menu-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 998; opacity: 0; transition: opacity 0.3s ease; }
+        .mobile-menu-overlay.active { display: block; opacity: 1; }
+
+        .footer-bottom { max-width: 1200px; margin: 60px auto 0; padding-top: 30px; border-top: 1px solid rgba(233, 156, 50, 0.08); display: flex; justify-content: space-between; align-items: center; color: var(--text-secondary); font-size: 13px; flex-wrap: wrap; gap: 15px; }
+        .footer-bottom-links { display: flex; gap: 25px; }
+        .footer-bottom-links a { color: var(--text-secondary); text-decoration: none; transition: color 0.3s ease; }
+        .footer-bottom-links a:hover { color: var(--yellow-primary); }
 
         /* ===== RESPONSIVE ===== */
-        @media (max-width: 1024px) {
-            .contact-grid { grid-template-columns: 1fr; gap: 50px; }
+        @media (max-width: 1200px) {
             .footer-content { grid-template-columns: repeat(2, 1fr); }
         }
 
+        @media (max-width: 1024px) {
+            .contact-grid { grid-template-columns: 1fr; gap: 50px; }
+            .hero-title { font-size: 52px; }
+        }
+
         @media (max-width: 768px) {
-            header { padding: 15px 20px; position: relative; z-index: 999; }
-            
-            /* Reset nav para móvil */
-            nav { position: static; }
-            
-            header.scrolled { padding: 12px 20px; }
-            
+            /* Header móvil */
+            header { padding: 12px 15px; position: fixed; }
+            header.scrolled { padding: 10px 15px; }
+            nav { position: relative; }
+
             /* Ocultar nav-links de escritorio */
-            .nav-links { 
-                display: none; 
-            }
+            .nav-links { display: none; position: static; transform: none; left: auto; }
 
             /* Mostrar menú móvil cuando está activo */
-            .nav-links.active {
+            .nav-links.mobile-active {
                 display: flex;
                 position: fixed;
-                top: 60px;
+                top: 70px;
                 left: 0;
                 right: 0;
                 width: 100%;
@@ -257,63 +272,49 @@
                 backdrop-filter: blur(20px);
                 -webkit-backdrop-filter: blur(20px);
                 flex-direction: column;
-                padding: 0;
+                padding: 20px 0;
                 gap: 0;
                 border-bottom: 2px solid var(--yellow-primary);
                 box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
                 z-index: 999;
-                max-height: calc(100vh - 60px);
+                max-height: calc(100vh - 70px);
                 overflow-y: auto;
                 animation: slideDown 0.3s ease-out;
             }
 
-            @keyframes slideDown {
-                from {
-                    opacity: 0;
-                    transform: translateY(-10px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-
-            /* Items del menú móvil */
-            .nav-links.active li {
+            .nav-links.mobile-active li {
                 width: 100%;
-                border-bottom: 1px solid rgba(233, 156, 50, 0.1);
                 list-style: none;
             }
 
-            .nav-links.active li:last-child {
-                border-bottom: none;
-            }
-
-            .nav-links.active a {
+            .nav-links.mobile-active li a {
                 display: block;
-                padding: 16px 20px;
+                padding: 16px 25px;
                 font-size: 14px;
                 letter-spacing: 3px;
                 text-align: center;
-                width: 100%;
                 color: var(--text-primary);
                 text-decoration: none;
                 transition: all 0.3s ease;
+                border-bottom: 1px solid rgba(233, 156, 50, 0.1);
             }
 
-            .nav-links.active a::before {
-                display: none;
+            .nav-links.mobile-active li:last-child a {
+                border-bottom: none;
             }
 
-            .nav-links.active a:hover, 
-            .nav-links.active a.active {
-                background: rgba(233, 156, 50, 0.1);
+            .nav-links.mobile-active li a:hover,
+            .nav-links.mobile-active li a.active {
+                background: rgba(233, 156, 50, 0.15);
                 color: var(--yellow-primary);
             }
 
-            /* Panel link en móvil */
-            .nav-links.active a.panel-link {
-                margin: 10px 15px 15px;
+            .nav-links.mobile-active a::before {
+                display: none;
+            }
+
+            .nav-links.mobile-active a.panel-link {
+                margin: 10px 20px 15px;
                 border: 1px solid var(--yellow-primary);
                 padding: 12px !important;
                 background: rgba(233, 156, 50, 0.15);
@@ -321,54 +322,64 @@
                 display: block;
             }
 
-            /* Botón hamburguesa visible en móvil */
-            .menu-toggle { 
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                gap: 5px;
-                cursor: pointer;
-                padding: 10px;
-                width: 44px;
-                height: 44px;
-                background: var(--glass-bg);
-                backdrop-filter: blur(10px);
-                border: 1px solid var(--glass-border);
-                border-radius: 4px;
-                transition: all 0.3s ease;
-                -webkit-tap-highlight-color: transparent;
-            }
+            /* Mostrar menú hamburguesa */
+            .menu-toggle { display: flex; }
 
-            .menu-toggle:active {
-                background: rgba(233, 156, 50, 0.2);
-                transform: scale(0.95);
-            }
+            /* Ajustes logo */
+            .logo-img { height: 32px; }
 
-            .menu-toggle span {
-                width: 22px; 
-                height: 2px;
-                background: var(--yellow-primary);
-                transition: all 0.3s ease;
-                display: block;
-            }
-
-            .menu-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
-            .menu-toggle.active span:nth-child(2) { opacity: 0; }
-            .menu-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
-            
+            /* Hero ajustes */
             .hero { padding: 150px 20px 80px; }
-            .hero-title { font-size: 38px; }
-            .contact-section { padding: 80px 20px; }
+            .hero-title { font-size: 38px; letter-spacing: 4px; }
+            .hero-subtitle { font-size: 16px; }
+
+            /* Contact section */
+            .contact-section { padding: 60px 20px; }
             .contact-form { padding: 35px 25px; }
             .form-row { grid-template-columns: 1fr; }
-            .footer-content { grid-template-columns: 1fr; text-align: center; }
+            
+            .contact-info h2 { font-size: 28px; }
+            .contact-info > p { font-size: 15px; }
+            .contact-item { padding: 15px 20px; }
+            .contact-icon { width: 45px; height: 45px; }
+            .contact-text h4 { font-size: 14px; }
+            .contact-text p { font-size: 13px; }
+
+            .social-link { width: 45px; height: 45px; }
+            .whatsapp-btn { padding: 14px 25px; font-size: 14px; width: 100%; justify-content: center; }
+
+            /* Footer */
+            .footer-content { grid-template-columns: 1fr; text-align: center; gap: 30px; }
             .footer-title::after { left: 50%; transform: translateX(-50%); }
             .footer-social-links { justify-content: center; }
+            .footer-bottom { flex-direction: column; text-align: center; gap: 15px; }
+        }
+
+        @media (max-width: 480px) {
+            header { padding: 10px 12px; }
+            .nav-links.mobile-active { top: 60px; }
+            .nav-links.mobile-active a { font-size: 13px; padding: 14px 15px; }
+            .hero-title { font-size: 32px; letter-spacing: 3px; }
+            .menu-toggle { width: 40px; height: 40px; padding: 8px; }
+            .menu-toggle span { width: 20px; }
+            .cart-icon { width: 38px; height: 38px; }
+        }
+
+        /* Reducir motion para accesibilidad */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Overlay para menú móvil -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
     <!-- Particles -->
     <div class="particles-container" id="particles"></div>
 
@@ -376,7 +387,7 @@
     <header id="header">
         <nav>
             <a href="index.html" class="logo" id="adminLogo">
-                <img src="ezentia.png" alt="EZENTIA" class="logo-img">
+                <img src="ezentia.png" alt="EZENTIA" class="logo-img" width="42" height="42">
             </a>
             <ul class="nav-links" id="navLinks">
                 <li><a href="index.html">Inicio</a></li>
@@ -385,26 +396,31 @@
                 <li><a href="contacto.html" class="active">Contacto</a></li>
             </ul>
             <div class="nav-right">
-                <div class="cart-icon" onclick="openCart()">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
-                    <span class="cart-count" id="cartCount">0</span>
+                <div class="cart-icon" onclick="openCart()" role="button" aria-label="Abrir carrito" tabindex="0">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                    </svg>
+                    <span class="cart-count" id="cartCount" aria-live="polite">0</span>
                 </div>
-            </div>
-            <div class="menu-toggle" id="menuToggle">
-                <span></span><span></span><span></span>
+                <div class="menu-toggle" id="menuToggle" aria-label="Menú" aria-expanded="false" role="button" tabindex="0">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
             </div>
         </nav>
     </header>
 
     <!-- Hero -->
     <section class="hero">
-        <div class="floating-element" style="top: 15%; left: 10%; animation-duration: 8s;" opacity:0.15;display:block;">
+        <div class="floating-element" style="top: 15%; left: 10%; animation-duration: 8s;">
+            <span style="width:8px;height:8px;background:var(--yellow-primary);opacity:0.12;transform:rotate(45deg);display:block;"></span>
         </div>
         <div class="floating-element" style="top: 50%; right: 8%; animation-duration: 10s; animation-delay: -3s;">
-            <span style="width:8px;height:8px;background:var(--gold);opacity:0.12;transform:rotate(45deg);display:block;"></span>
+            <span style="width:8px;height:8px;background:var(--yellow-primary);opacity:0.12;transform:rotate(45deg);display:block;"></span>
         </div>
         <div class="floating-element" style="bottom: 20%; left: 20%; animation-duration: 7s; animation-delay: -5s;">
-            <span style="width:12px;height:12px;border:1px solid var(--gold);opacity:0.1;transform:rotate(45deg);display:block;"></span>
+            <span style="width:12px;height:12px;border:1px solid var(--yellow-primary);opacity:0.1;transform:rotate(45deg);display:block;"></span>
         </div>
 
         <div class="hero-content">
@@ -427,7 +443,7 @@
                 </p>
 
                 <div class="contact-items">
-                    <a href="https://wa.me/573016952398" class="contact-item" target="_blank">
+                    <a href="https://wa.me/573016952398" class="contact-item" target="_blank" rel="noopener">
                         <div class="contact-icon">
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                         </div>
@@ -471,19 +487,19 @@
                 <div class="social-section">
                     <h4>Síguenos en Redes Sociales</h4>
                     <div class="social-links">
-                        <a href="https://www.instagram.com/ezentia.pl?igsh=bWlxZHVqcjRuajFq" class="social-link" target="_blank" title="Instagram">
+                        <a href="https://www.instagram.com/ezentia.pl" class="social-link" target="_blank" rel="noopener" title="Instagram">
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                         </a>
-                        <a href="https://wa.me/573016952398" class="social-link" target="_blank" title="WhatsApp">
+                        <a href="https://wa.me/573016952398" class="social-link" target="_blank" rel="noopener" title="WhatsApp">
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                         </a>
-                        <a href="mailto:info@ezentia.com" class="social-link" target="_blank" title="Email">
+                        <a href="mailto:info@ezentia.com" class="social-link" target="_blank" rel="noopener" title="Email">
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.104 10-8.104v11.817h-20z"/></svg>
                         </a>
                     </div>
                 </div>
 
-                <a href="https://wa.me/573016952398?text=Hola,%20me%20interesa%20conocer%20más%20sobre%20sus%20fragancias" class="whatsapp-btn" target="_blank">
+                <a href="https://wa.me/573016952398?text=Hola,%20me%20interesa%20conocer%20más%20sobre%20sus%20fragancias" class="whatsapp-btn" target="_blank" rel="noopener">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                     Chatear por WhatsApp
                 </a>
@@ -552,17 +568,17 @@
         <div class="footer-content">
             <div class="footer-brand">
                 <a href="index.html" class="logo">
-                    <img src="ezentia.png" alt="EZENTIA" class="logo-img">
+                    <img src="ezentia.png" alt="EZENTIA" class="logo-img" width="42" height="42">
                 </a>
                 <p>EZENTIA - Tu destino para fragancias de lujo originales.</p>
                 <div class="footer-social-links" style="margin-top: 25px;">
-                    <a href="https://www.instagram.com/ezentia.pl?igsh=bWlxZHVqcjRuajFq" class="footer-social-link" target="_blank">
+                    <a href="https://www.instagram.com/ezentia.pl" class="footer-social-link" target="_blank" rel="noopener">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                     </a>
-                    <a href="https://wa.me/573016952398" class="footer-social-link" target="_blank">
+                    <a href="https://wa.me/573016952398" class="footer-social-link" target="_blank" rel="noopener">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                     </a>
-                    <a href="mailto:info@ezentia.com" class="footer-social-link" target="_blank">
+                    <a href="mailto:info@ezentia.com" class="footer-social-link" target="_blank" rel="noopener">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.104 10-8.104v11.817h-20z"/></svg>
                     </a>
                 </div>
@@ -596,37 +612,59 @@
             </div>
         </div>
 
-        <div class="footer-bottom">
-            <p>© 2024 EZENTIA Perfumería Luxury. Todos los derechos reservados.</p>
+        <div class="footer-bottom">             <p>© 2024 EZENTIA Perfumería Luxury. Todos los derechos reservados.</p>
+            <div class="footer-bottom-links">
+                <a href="#">Privacidad</a>
+                <a href="#">Términos</a>
+            </div>
         </div>
     </footer>
 
     <script>
-        // ===== CART =====
-        var cart = JSON.parse(localStorage.getItem('ezentia_cart')) || [];
-        updateCartCount();
-
+        // ===== CARRITO MEJORADO =====
+        let cart = JSON.parse(localStorage.getItem('ezentia_cart')) || [];
+        
         function updateCartCount() {
-            var count = cart.reduce(function(sum, item) { return sum + item.quantity; }, 0);
-            document.getElementById('cartCount').textContent = count;
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const cartCountEl = document.getElementById('cartCount');
+            if (cartCountEl) {
+                cartCountEl.textContent = count;
+                // Animación de pulso
+                cartCountEl.style.transform = 'scale(1.3)';
+                setTimeout(() => {
+                    cartCountEl.style.transform = 'scale(1)';
+                }, 200);
+            }
         }
 
         function openCart() {
-            document.getElementById('cartModal').classList.add('active');
-            document.getElementById('cartOverlay').classList.add('active');
-            document.body.style.overflow = 'hidden';
-            renderCartItems();
+            const cartModal = document.getElementById('cartModal');
+            const cartOverlay = document.getElementById('cartOverlay');
+            
+            if (cartModal && cartOverlay) {
+                cartModal.classList.add('active');
+                cartOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                renderCartItems();
+            }
         }
 
         function closeCart() {
-            document.getElementById('cartModal').classList.remove('active');
-            document.getElementById('cartOverlay').classList.remove('active');
-            document.body.style.overflow = '';
+            const cartModal = document.getElementById('cartModal');
+            const cartOverlay = document.getElementById('cartOverlay');
+            
+            if (cartModal && cartOverlay) {
+                cartModal.classList.remove('active');
+                cartOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
         }
 
         function renderCartItems() {
-            var container = document.getElementById('cartItems');
-            var totalSection = document.getElementById('cartTotalSection');
+            const container = document.getElementById('cartItems');
+            const totalSection = document.getElementById('cartTotalSection');
+            
+            if (!container || !totalSection) return;
             
             if (cart.length === 0) {
                 container.innerHTML = '<div class="cart-empty">Tu carrito está vacío</div>';
@@ -635,58 +673,147 @@
             }
 
             totalSection.style.display = 'block';
-            var total = 0;
+            let total = 0;
 
-            container.innerHTML = cart.map(function(item, index) {
-                total = total + item.price * item.quantity;
-                return '<div class="cart-item"><img src="' + item.image + '" alt="' + item.name + '"><div class="cart-item-info"><h4 class="cart-item-name">' + item.name + '</h4><p class="cart-item-price">$' + item.price.toLocaleString() + '</p><div class="cart-item-quantity"><button class="qty-btn" onclick="updateQuantity(' + index + ', -1)">-</button><span>' + item.quantity + '</span><button class="qty-btn" onclick="updateQuantity(' + index + ', 1)">+</button></div><button class="cart-item-remove" onclick="removeFromCart(' + index + ')">Eliminar</button></div></div>';
+            container.innerHTML = cart.map((item, index) => {
+                total += item.price * item.quantity;
+                return `
+                    <div class="cart-item">
+                        <img src="${item.img || item.image}" alt="${item.name}">
+                        <div class="cart-item-info">
+                            <h4 class="cart-item-name">${item.name}</h4>
+                            <p class="cart-item-price">$${item.price.toLocaleString('es-CO')}</p>
+                            <div class="cart-item-quantity">
+                                <button class="qty-btn" onclick="updateQuantity(${index}, -1)">-</button>
+                                <span>${item.quantity}</span>
+                                <button class="qty-btn" onclick="updateQuantity(${index}, 1)">+</button>
+                            </div>
+                            <button class="cart-item-remove" onclick="removeItem(${index})">Eliminar</button>
+                        </div>
+                    </div>
+                `;
             }).join('');
 
-            document.getElementById('cartTotalValue').textContent = '$' + total.toLocaleString();
+            const cartTotalValue = document.getElementById('cartTotalValue');
+            if (cartTotalValue) {
+                cartTotalValue.textContent = '$' + total.toLocaleString('es-CO');
+            }
         }
 
         function updateQuantity(index, change) {
-            cart[index].quantity = cart[index].quantity + change;
+            cart[index].quantity += change;
             if (cart[index].quantity <= 0) {
                 cart.splice(index, 1);
             }
-            localStorage.setItem('ezentia_cart', JSON.stringify(cart));
+            saveCart();
             updateCartCount();
             renderCartItems();
         }
 
-        function removeFromCart(index) {
+        function removeItem(index) {
             cart.splice(index, 1);
-            localStorage.setItem('ezentia_cart', JSON.stringify(cart));
+            saveCart();
             updateCartCount();
             renderCartItems();
+        }
+
+        function saveCart() {
+            localStorage.setItem('ezentia_cart', JSON.stringify(cart));
         }
 
         function checkout() {
             if (cart.length === 0) return;
-            var message = 'Hola, me gustaría comprar los siguientes productos:%0A';
-            var total = 0;
-            cart.forEach(function(item) {
-                message = message + '- ' + item.name + ' x' + item.quantity + ': $' + (item.price * item.quantity).toLocaleString() + '%0A';
-                total = total + item.price * item.quantity;
+            
+            let message = 'Hola EZENTIA, quiero comprar:%0A%0A';
+            let total = 0;
+            
+            cart.forEach(item => {
+                const subtotal = item.price * item.quantity;
+                message += `• ${item.name} x${item.quantity}: $${subtotal.toLocaleString('es-CO')}%0A`;
+                total += subtotal;
             });
-            message = message + '%0ATotal: $' + total.toLocaleString();
-            window.open('https://wa.me/573016952398?text=' + message, '_blank');
+            
+            message += `%0ATotal: $${total.toLocaleString('es-CO')}%0A%0AGracias!`;
+            
+            cart = [];
+            saveCart();
+            updateCartCount();
+            closeCart();
+            
+            window.open(`https://wa.me/573016952398?text=${message}`, '_blank', 'noopener,noreferrer');
         }
 
-        // ===== MOBILE MENU =====
-        document.getElementById('menuToggle').addEventListener('click', function() {
-            document.getElementById('navLinks').classList.toggle('active');
-            this.classList.toggle('active');
-        });
+        // ===== HEADER SCROLL =====
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (header) {
+                header.classList.toggle('scrolled', window.scrollY > 80);
+            }
+        }, { passive: true });
 
-        // Close menu when clicking outside
-        document.addEventListener('click', function(e) {
-            const nav = document.getElementById('navLinks');
-            const toggle = document.getElementById('menuToggle');
-            if (!nav.contains(e.target) && !toggle.contains(e.target)) {
-                nav.classList.remove('active');
-                toggle.classList.remove('active');
+        // ===== MENÚ MÓVIL MEJORADO (IGUAL QUE INDEX) =====
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+
+        function toggleMobileMenu() {
+            if (!navLinks || !menuToggle) return;
+            
+            const isActive = navLinks.classList.contains('mobile-active');
+            
+            if (isActive) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        }
+
+        function openMobileMenu() {
+            if (!navLinks || !menuToggle || !mobileMenuOverlay) return;
+            
+            navLinks.classList.add('mobile-active');
+            menuToggle.classList.add('active');
+            menuToggle.setAttribute('aria-expanded', 'true');
+            mobileMenuOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileMenu() {
+            if (!navLinks || !menuToggle || !mobileMenuOverlay) return;
+            
+            navLinks.classList.remove('mobile-active');
+            menuToggle.classList.remove('active');
+            menuToggle.setAttribute('aria-expanded', 'false');
+            mobileMenuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        if (menuToggle) {
+            menuToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleMobileMenu();
+            });
+        }
+
+        if (mobileMenuOverlay) {
+            mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+        }
+
+        // Cerrar menú al hacer click en links
+        if (navLinks) {
+            const links = navLinks.querySelectorAll('a');
+            links.forEach(link => {
+                link.addEventListener('click', () => {
+                    closeMobileMenu();
+                });
+            });
+        }
+
+        // Cerrar con Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeMobileMenu();
+                closeCart();
             }
         });
 
@@ -694,9 +821,9 @@
         function submitForm(e) {
             e.preventDefault();
             
-            // Save message to localStorage
-            var messages = JSON.parse(localStorage.getItem('ezentia_messages')) || [];
-            var newMessage = {
+            // Guardar mensaje en localStorage
+            const messages = JSON.parse(localStorage.getItem('ezentia_messages')) || [];
+            const newMessage = {
                 id: Date.now(),
                 name: document.getElementById('contactName').value,
                 phone: document.getElementById('contactPhone').value,
@@ -709,22 +836,27 @@
             messages.push(newMessage);
             localStorage.setItem('ezentia_messages', JSON.stringify(messages));
 
-            // Visual feedback
-            var btn = e.target.querySelector('.submit-btn');
-            btn.textContent = '✓ Mensaje Enviado';
-            btn.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
-            setTimeout(function() {
-                btn.textContent = 'Enviar Mensaje';
-                btn.style.background = '';
-                e.target.reset();
-            }, 3000);
+            // Feedback visual
+            const btn = e.target.querySelector('.submit-btn');
+            if (btn) {
+                btn.textContent = '✓ Mensaje Enviado';
+                btn.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
+                
+                setTimeout(() => {
+                    btn.textContent = 'Enviar Mensaje';
+                    btn.style.background = '';
+                    e.target.reset();
+                }, 3000);
+            }
         }
 
         // ===== PARTICLES =====
         function createParticles() {
-            var container = document.getElementById('particles');
-            for (var i = 0; i < 15; i++) {
-                var p = document.createElement('div');
+            const container = document.getElementById('particles');
+            if (!container) return;
+            
+            for (let i = 0; i < 15; i++) {
+                const p = document.createElement('div');
                 p.className = 'particle';
                 p.style.left = Math.random() * 100 + '%';
                 p.style.animationDuration = (Math.random() * 15 + 10) + 's';
@@ -736,34 +868,43 @@
         }
         createParticles();
 
-        // ===== HEADER SCROLL =====
-        window.addEventListener('scroll', function() {
-            document.getElementById('header').classList.toggle('scrolled', window.scrollY > 80);
-        });
+        // ===== ADMIN ACCESS (5 clicks) =====
+        const adminLogo = document.getElementById('adminLogo');
+        if (adminLogo) {
+            let clickCount = 0;
+            let clickTimer = null;
+            
+            adminLogo.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                if (clickTimer) clearTimeout(clickTimer);
+                
+                clickCount++;
+                clickTimer = setTimeout(() => { 
+                    clickCount = 0; 
+                }, 1000);
+                
+                if (clickCount >= 5) { 
+                    clickCount = 0; 
+                    window.location.href = 'admin.html'; 
+                }
+            });
+        }
 
-        // ===== ADMIN ACCESS (5 CLICKS) =====
-        var clickCount = 0;
-        var clickTimer = null;
-        document.getElementById('adminLogo').addEventListener('click', function(e) {
-            e.preventDefault();
-            clickCount++;
-            if (clickTimer) clearTimeout(clickTimer);
-            clickTimer = setTimeout(function() { clickCount = 0; }, 1000);
-            if (clickCount >= 5) {
-                clickCount = 0;
-                window.location.href = 'admin.html';
-            }
-        });
-        
-        // Agregar link de Panel al navbar si hay sesión de admin
+        // ===== AGREGAR LINK DE PANEL SI HAY SESIÓN =====
         if (localStorage.getItem('ezentia_admin_session')) {
-            const navLinks = document.getElementById('navLinks');
-            if (navLinks) {
+            const navLinksList = document.getElementById('navLinks');
+            if (navLinksList && !navLinksList.querySelector('.panel-link')) {
                 const panelLink = document.createElement('li');
                 panelLink.innerHTML = '<a href="admin.html" class="panel-link">Panel</a>';
-                navLinks.appendChild(panelLink);
+                navLinksList.appendChild(panelLink);
             }
         }
+
+        // ===== INICIALIZACIÓN =====
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartCount();
+        });
     </script>
 </body>
 </html>
