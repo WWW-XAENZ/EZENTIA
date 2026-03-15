@@ -964,13 +964,14 @@
         }
 
         .card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.8s;
-            transform-style: preserve-3d;
-            -webkit-transform-style: preserve-3d;
-        }
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+    transform: translateZ(0);
+}
 
         .product-card:hover .card-inner {
             transform: rotateY(180deg);
@@ -978,19 +979,14 @@
         }
 
         .card-front,
-        .card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-            padding: 30px 25px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            /* FIX iOS: Asegurar que flex funcione correctamente */
-            align-items: center;
-        }
+.card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform: translateZ(0);
+}
 
         .card-back {
             transform: rotateY(180deg);
@@ -1880,6 +1876,9 @@
 
         /* ===== MÓVIL - MENÚ HAMBURGUESA Y CARRUSEL ===== */
         @media (max-width: 768px) {
+            .product-card:hover .card-inner {
+    transform: none;
+}
             /* Header móvil */
             header { 
                 padding: 12px 15px; 
