@@ -2,8 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport corregido para iOS -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>EZENTIA | Perfumería Luxury</title>
     <link rel="icon" type="image/png" href="ezentia.png">
 
@@ -60,9 +59,6 @@
             --glass-blur: blur(20px);
             --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
             
-            /* FIX iOS: Usar dvh en lugar de vh cuando esté disponible */
-            --vh: 100vh;
-            
             /* Variables de espaciado responsive */
             --space-xs: clamp(0.5rem, 1vw, 0.75rem);
             --space-sm: clamp(0.75rem, 2vw, 1rem);
@@ -82,20 +78,6 @@
             --text-5xl: clamp(3rem, 10vw, 5rem);
         }
 
-        /* FIX iOS: Soporte para unidades dinámicas de viewport */
-        @supports (height: 100dvh) {
-            :root {
-                --vh: 100dvh;
-            }
-        }
-
-        /* FIX iOS: Webkit fill available para Safari */
-        @supports (-webkit-touch-callout: none) {
-            :root {
-                --vh: -webkit-fill-available;
-            }
-        }
-
         * { 
             margin: 0; 
             padding: 0; 
@@ -106,8 +88,6 @@
         html { 
             scroll-behavior: smooth;
             font-size: 16px;
-            /* FIX iOS: Altura para Safari */
-            height: -webkit-fill-available;
         }
 
         body {
@@ -118,10 +98,6 @@
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            /* FIX iOS: Altura mínima correcta */
-            min-height: 100vh;
-            min-height: var(--vh);
-            min-height: -webkit-fill-available;
         }
 
         /* Scrollbar mejorada */
@@ -237,8 +213,6 @@
             padding: 18px 50px;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             will-change: transform, background;
-            /* FIX iOS: Asegurar que el header no cause problemas de z-index */
-            transform: translateZ(0);
         }
 
         header.scrolled {
@@ -257,8 +231,6 @@
             justify-content: space-between;
             align-items: center;
             position: relative;
-            /* FIX iOS: Asegurar que flex funcione correctamente */
-            width: 100%;
         }
 
         .logo {
@@ -269,10 +241,6 @@
             z-index: 1002;
             transition: transform 0.3s ease;
             cursor: pointer;
-            /* FIX iOS: Evitar problemas de touch */
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
         }
 
         .logo:hover {
@@ -300,10 +268,6 @@
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            /* FIX iOS: Asegurar ancho para centrado correcto */
-            width: auto;
-            margin: 0;
-            padding: 0;
         }
 
         .nav-right {
@@ -369,14 +333,11 @@
             padding: 10px;
             background: var(--glass-bg);
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
             border-radius: 50%;
             transition: all 0.3s ease;
             width: 44px;
             height: 44px;
-            /* FIX iOS: Mejorar respuesta táctil */
-            -webkit-tap-highlight-color: rgba(233, 156, 50, 0.2);
         }
 
         .cart-icon:hover {
@@ -431,13 +392,10 @@
             height: 48px;
             background: var(--glass-bg);
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
             border-radius: 12px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             -webkit-tap-highlight-color: transparent;
-            /* FIX iOS: Evitar zoom en doble tap */
-            touch-action: manipulation;
         }
 
         .menu-toggle:hover {
@@ -470,12 +428,9 @@
             transform: rotate(-45deg) translate(5px, -5px); 
         }
 
-        /* ===== HERO MEJORADO - FIX iOS ===== */
+        /* ===== HERO MEJORADO ===== */
         .hero {
-            /* FIX iOS: Usar min-height con fallback en lugar de height fijo */
             min-height: 100vh;
-            min-height: var(--vh);
-            min-height: -webkit-fill-available;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -483,8 +438,6 @@
             overflow: hidden;
             background: var(--bg-primary);
             padding-top: 80px;
-            /* FIX iOS: Asegurar que el hero ocupe el espacio correcto */
-            padding-bottom: env(safe-area-inset-bottom);
         }
 
         .hero-bg-orbs {
@@ -579,9 +532,6 @@
             z-index: 2;
             position: relative;
             padding: 0 20px;
-            /* FIX iOS: Asegurar que el contenido no se desborde */
-            width: 100%;
-            max-width: 100%;
         }
 
         .hero-logo-wrapper {
@@ -693,8 +643,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            /* FIX iOS: Evitar problemas con gradient text */
-            -webkit-text-fill-color: transparent;
         }
 
         .hero-subtitle {
@@ -888,8 +836,6 @@
             max-width: 1100px;
             margin: 0 auto;
             justify-items: center;
-            /* FIX iOS: Asegurar que el grid no cause overflow */
-            width: 100%;
         }
 
         /* Product Card - ESTRUCTURA ORIGINAL COMPLETA */
@@ -902,14 +848,9 @@
             text-align: center;
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            overflow: hidden;
             cursor: pointer;
             width: 320px;
             height: 420px;
-            perspective: 1000px;
-            /* FIX iOS: Mejorar renderizado 3D */
-            -webkit-transform-style: preserve-3d;
-            transform-style: preserve-3d;
         }
 
         .product-card[data-category="hombre"],
@@ -949,7 +890,6 @@
             font-weight: bold;
             z-index: 10;
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             background: rgba(233, 156, 50, 0.15);
             color: #e99c32;
             border: 1px solid rgba(233, 156, 50, 0.4);
@@ -970,29 +910,40 @@
     transition: transform 0.8s;
     transform-style: preserve-3d;
     -webkit-transform-style: preserve-3d;
-    transform: translateZ(0);
+    perspective: 1000px;
+    -webkit-perspective: 1000px;
+}
+
+.product-card:hover .card-inner,
+.product-card.flipped .card-inner {
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
 }
 
         .product-card:hover .card-inner {
             transform: rotateY(180deg);
-            -webkit-transform: rotateY(180deg);
         }
 
         .card-front,
-.card-back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    transform: translateZ(0);
-}
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            padding: 30px 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: inherit;
+        }
 
         .card-back {
             transform: rotateY(180deg);
-            -webkit-transform: rotateY(180deg);
             background: linear-gradient(135deg, #ffffff, rgba(233, 156, 50, 0.05));
             border: 2px solid #e99c32;
+            -webkit-transform: rotateY(180deg);
         }
 
         .flip-hint {
@@ -1107,9 +1058,6 @@
             text-transform: uppercase;
             cursor: pointer;
             transition: all 0.3s ease;
-            /* FIX iOS: Mejorar respuesta táctil */
-            -webkit-tap-highlight-color: rgba(233, 156, 50, 0.2);
-            touch-action: manipulation;
         }
 
         .add-btn:hover {
@@ -1153,8 +1101,6 @@
             display: flex;
             transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             width: 100%;
-            /* FIX iOS: Mejorar scroll táctil */
-            -webkit-overflow-scrolling: touch;
         }
 
         .carousel-slide {
@@ -1176,7 +1122,6 @@
             height: 50px;
             background: var(--glass-bg);
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
             color: var(--yellow-primary);
             cursor: pointer;
@@ -1185,9 +1130,6 @@
             justify-content: center;
             transition: all 0.3s ease;
             border-radius: 50%;
-            /* FIX iOS: Mejorar respuesta táctil */
-            -webkit-tap-highlight-color: rgba(233, 156, 50, 0.2);
-            touch-action: manipulation;
         }
 
         .carousel-btn:hover:not(:disabled) {
@@ -1214,9 +1156,6 @@
             cursor: pointer;
             transition: all 0.3s ease;
             border: none;
-            /* FIX iOS: Mejorar respuesta táctil */
-            -webkit-tap-highlight-color: rgba(233, 156, 50, 0.2);
-            touch-action: manipulation;
         }
 
         .carousel-dot.active {
@@ -1289,8 +1228,6 @@
             gap: 25px;
             max-width: 1200px;
             margin: 0 auto;
-            /* FIX iOS: Asegurar que el grid no colapse */
-            width: 100%;
         }
 
         .feature-card {
@@ -1421,8 +1358,6 @@
             font-family: 'Hoefler Text', serif;
             font-size: 16px;
             transition: all 0.3s ease;
-            /* FIX iOS: Evitar zoom en input focus */
-            font-size: 16px;
         }
 
         .newsletter-input::placeholder { 
@@ -1447,9 +1382,6 @@
             cursor: pointer;
             transition: all 0.3s ease;
             white-space: nowrap;
-            /* FIX iOS: Mejorar respuesta táctil */
-            -webkit-tap-highlight-color: rgba(233, 156, 50, 0.2);
-            touch-action: manipulation;
         }
 
         .newsletter-btn:hover {
@@ -1558,7 +1490,6 @@
             height: 42px;
             background: var(--glass-bg);
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
             display: flex;
             align-items: center;
@@ -1613,10 +1544,7 @@
             right: 0;
             width: 100%; 
             max-width: 420px;
-            height: 100%;
-            /* FIX iOS: Usar unidades correctas para altura */
             height: 100vh;
-            height: var(--vh);
             background: rgba(66, 56, 54, 0.98);
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(30px);
@@ -1624,8 +1552,6 @@
             z-index: 2000;
             padding: 30px;
             overflow-y: auto;
-            /* FIX iOS: Scroll táctil suave */
-            -webkit-overflow-scrolling: touch;
             box-shadow: -20px 0 60px rgba(0, 0, 0, 0.6);
             transform: translateX(100%);
             transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1664,9 +1590,6 @@
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            /* FIX iOS: Mejorar respuesta táctil */
-            -webkit-tap-highlight-color: rgba(233, 156, 50, 0.2);
-            touch-action: manipulation;
         }
 
         .cart-close:hover {
@@ -1733,9 +1656,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            /* FIX iOS: Mejorar respuesta táctil */
-            -webkit-tap-highlight-color: rgba(233, 156, 50, 0.2);
-            touch-action: manipulation;
         }
 
         .qty-btn:hover {
@@ -1800,9 +1720,6 @@
             transition: all 0.3s ease;
             border-radius: 4px;
             font-weight: 600;
-            /* FIX iOS: Mejorar respuesta táctil */
-            -webkit-tap-highlight-color: rgba(233, 156, 50, 0.2);
-            touch-action: manipulation;
         }
 
         .cart-checkout-btn:hover {
@@ -1820,7 +1737,6 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
             z-index: 1999;
             opacity: 0;
             transition: opacity 0.3s ease;
@@ -1841,7 +1757,6 @@
             bottom: 0;
             background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
             z-index: 998;
             opacity: 0;
             transition: opacity 0.3s ease;
@@ -1876,9 +1791,6 @@
 
         /* ===== MÓVIL - MENÚ HAMBURGUESA Y CARRUSEL ===== */
         @media (max-width: 768px) {
-            .product-card:hover .card-inner {
-    transform: none;
-}
             /* Header móvil */
             header { 
                 padding: 12px 15px; 
@@ -1920,9 +1832,7 @@
                 box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
                 z-index: 999;
                 max-height: calc(100vh - 70px);
-                max-height: calc(var(--vh) - 70px);
                 overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
                 animation: slideDown 0.3s ease-out;
             }
 
@@ -1990,9 +1900,6 @@
             /* Hero ajustes */
             .hero {
                 padding-top: 70px;
-                /* FIX iOS: Ajustar altura mínima en móvil */
-                min-height: calc(100vh - 70px);
-                min-height: calc(var(--vh) - 70px);
             }
 
             .hero-title { 
@@ -2082,8 +1989,6 @@
             .newsletter-input { 
                 border-right: 1px solid rgba(233, 156, 50, 0.2);
                 text-align: center;
-                /* FIX iOS: Evitar zoom en focus */
-                font-size: 16px;
             }
             
             .newsletter-btn {
@@ -2097,237 +2002,64 @@
 
             /* Botones */
             .hero-buttons { 
-                flex-direction: column;
-                            align-items: center;
-            gap: 12px;
-        }
-        
-        .hero-btn {
-            width: 100%;
-            max-width: 260px;
-            padding: 14px 30px;
-        }
-
-        /* Cart modal en móvil */
-        .cart-modal {
-            max-width: 100%;
-            width: 100%;
-            padding: 20px;
-        }
-    }
-
-    @media (max-width: 480px) {
-        header {
-            padding: 10px 12px;
+                flex-direction: column; 
+                align-items: center;
+                gap: 12px;
+            }
+            
+            .hero-btn {
+                width: 100%;
+                max-width: 260px;
+                padding: 14px 30px;
+            }
         }
 
-        .nav-links.mobile-active {
-            top: 60px;
-            max-height: calc(100vh - 60px);
-            max-height: calc(var(--vh) - 60px);
+        @media (max-width: 480px) {
+            header {
+                padding: 10px 12px;
+            }
+
+            .nav-links.mobile-active {
+                top: 60px;
+            }
+
+            .nav-links.mobile-active a {
+                font-size: 13px;
+                padding: 14px 15px;
+            }
+
+            .hero-title {
+                font-size: 24px;
+                letter-spacing: 3px;
+            }
+
+            .menu-toggle {
+                width: 40px;
+                height: 40px;
+                padding: 8px;
+            }
+
+            .menu-toggle span {
+                width: 20px;
+            }
+
+            .cart-icon {
+                width: 38px;
+                height: 38px;
+            }
         }
 
-        .hero-title {
-            font-size: 24px;
-            letter-spacing: 3px;
+        /* Reducir motion para accesibilidad */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
         }
-
-        .menu-toggle {
-            width: 40px;
-            height: 40px;
-            padding: 8px;
-        }
-
-        .menu-toggle span {
-            width: 20px;
-        }
-
-        .cart-icon {
-            width: 38px;
-            height: 38px;
-        }
-
-        .product-card {
-            height: 380px;
-        }
-
-        .product-card .product-name {
-            font-size: 28px;
-        }
-
-        .product-card .product-price {
-            font-size: 26px;
-        }
-    }
-
-    /* ===== FIXES ESPECÍFICOS PARA iOS/SAFARI ===== */
-
-    /* FIX iOS: Evitar el "rubber band" effect en el body cuando el menú está abierto */
-    body.menu-open {
-        overflow: hidden;
-        position: fixed;
-        width: 100%;
-        height: 100%;
-    }
-
-      /* FIX iOS: Mejorar el renderizado de elementos con backdrop-filter */
-    @supports (-webkit-backdrop-filter: blur(20px)) {
-        .cart-icon,
-        .menu-toggle,
-        .feature-card,
-        .newsletter-glass,
-        .hero-btn-secondary,
-        .cart-modal,
-        .mobile-menu-overlay,
-        .cart-overlay,
-        .social-link,
-        .cart-close,
-        .qty-btn {
-            -webkit-backdrop-filter: blur(20px);
-                backdrop-filter: blur(20px);
-        }
-    }
-
-    /* FIX iOS: Asegurar que las animaciones no causen repaints costosos */
-    .hero-logo,
-    .floating-element,
-    .orb,
-    .product-card .product-image img {
-        will-change: transform;
-        transform: translateZ(0);
-    }
-
-    /* FIX iOS: Prevenir el zoom automático en inputs */
-    @media screen and (-webkit-min-device-pixel-ratio: 0) {
-        input[type="email"],
-        input[type="text"],
-        input[type="number"],
-        textarea,
-        select {
-            font-size: 16px !important;
-        }
-    }
-
-    /* FIX iOS: Ajustes específicos para iPhone con notch */
-    @supports (padding-top: env(safe-area-inset-top)) {
-        header {
-            padding-top: max(18px, env(safe-area-inset-top));
-        }
-
-        header.scrolled {
-            padding-top: max(12px, env(safe-area-inset-top));
-        }
-
-        .hero {
-            padding-top: max(80px, env(safe-area-inset-top) + 60px);
-        }
-
-        .cart-modal {
-            padding-top: max(30px, env(safe-area-inset-top));
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-
-        .mobile-menu-overlay {
-            top: env(safe-area-inset-top);
-        }
-    }
-
-    /* FIX iOS: Mejorar la respuesta táctil en elementos interactivos */
-    @media (hover: none) and (pointer: coarse) {
-        .hero-btn:hover,
-        .add-btn:hover,
-        .wa-btn:hover,
-        .carousel-btn:hover,
-        .cart-close:hover,
-        .qty-btn:hover,
-        .cart-checkout-btn:hover,
-        .social-link:hover,
-        .newsletter-btn:hover {
-            transform: none;
-        }
-
-        .hero-btn:active,
-        .add-btn:active,
-        .wa-btn:active,
-        .carousel-btn:active,
-        .cart-close:active,
-        .qty-btn:active,
-        .cart-checkout-btn:active,
-        .social-link:active,
-        .newsletter-btn:active {
-            transform: scale(0.98);
-            opacity: 0.9;
-        }
-
-        .product-card:hover {
-            transform: none;
-        }
-
-        .product-card:active {
-            transform: scale(0.98);
-        }
-
-        .feature-card:hover {
-            transform: none;
-        }
-
-        .feature-card:active {
-            transform: scale(0.98);
-        }
-    }
-
-    /* FIX iOS: Asegurar que el carrusel funcione correctamente con touch */
-    .products-carousel {
-        touch-action: pan-y pinch-zoom;
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        user-select: none;
-    }
-
-    /* FIX iOS: Prevenir el comportamiento de "pull to refresh" cuando no se desea */
-    body {
-        overscroll-behavior-y: none;
-    }
-
-    /* FIX iOS: Ajustes para el modal del carrito en pantallas pequeñas */
-    @media (max-width: 420px) {
-        .cart-modal {
-            padding: 15px;
-        }
-
-        .cart-item {
-            gap: 10px;
-        }
-
-        .cart-item img {
-            width: 60px;
-            height: 60px;
-        }
-
-        .cart-item-name {
-            font-size: 14px;
-        }
-
-        .cart-item-price {
-            font-size: 13px;
-        }
-
-        .cart-total-row {
-            font-size: 18px;
-        }
-    }
-
-    /* Reducir motion para accesibilidad */
-    @media (prefers-reduced-motion: reduce) {
-        *,
-        *::before,
-        *::after {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.01ms !important;
-            scroll-behavior: auto !important;
-        }
-    }
     </style>
     
     <!-- Supabase SDK para sincronización automática -->
@@ -2394,7 +2126,7 @@
                 <div class="splash-particle"></div>
                 <div class="splash-particle"></div>
                 <div class="splash-ring splash-ring-1"></div>
-                <div class="splash-ring splash-ring-2"></div>
+                <div class="                <div class="splash-ring splash-ring-2"></div>
                 <div class="splash-ring splash-ring-3"></div>
                 <img src="ezentiaWhite.png" alt="EZENTIA" class="hero-logo" width="360" height="auto" loading="eager">
             </div>
@@ -2632,28 +2364,6 @@
         let totalSlides = 0;
         let bestsellersData = [];
         let isMobile = window.innerWidth <= 768;
-        // FIX iOS: Detectar iOS específicamente
-        let isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
-        // ===== FIX iOS: Ajustar altura del viewport =====
-        function setViewportHeight() {
-            let vh = window.innerHeight * 0.01;
-            document.documentElement.style.setProperty('--vh', `${vh * 100}px`);
-            
-            // FIX iOS: También actualizar el valor para Safari
-            if (isIOS) {
-                document.documentElement.style.setProperty('--vh', `${window.innerHeight}px`);
-            }
-        }
-
-        // Ejecutar al cargar y al redimensionar
-        setViewportHeight();
-        window.addEventListener('resize', setViewportHeight);
-        
-        // FIX iOS: También ejecutar al cambiar orientación
-        window.addEventListener('orientationchange', () => {
-            setTimeout(setViewportHeight, 100);
-        });
 
         // ===== CARGAR PRODUCTOS =====
         function loadBestSellers() {
@@ -2877,52 +2587,39 @@
             updateCarousel();
         }
 
-        // Touch/Swipe support para el carrusel móvil - FIX iOS mejorado
+        // Touch/Swipe support para el carrusel móvil
         let touchStartX = 0;
         let touchEndX = 0;
-        let touchStartY = 0;
-        let isSwiping = false;
 
-        function initTouchEvents() {
-            const carousel = document.getElementById('productsCarousel');
-            if (!carousel) return;
-            
-            // FIX iOS: Usar {passive: true} para mejor performance
-            carousel.addEventListener('touchstart', (e) => {
-                touchStartX = e.changedTouches[0].screenX;
-                touchStartY = e.changedTouches[0].screenY;
-                isSwiping = true;
-            }, {passive: true});
-            
-            carousel.addEventListener('touchmove', (e) => {
-                if (!isSwiping) return;
-                
-                const currentX = e.changedTouches[0].screenX;
-                const currentY = e.changedTouches[0].screenY;
-                const diffX = touchStartX - currentX;
-                const diffY = touchStartY - currentY;
-                
-                // FIX iOS: Detectar si es scroll horizontal o vertical
-                if (Math.abs(diffX) > Math.abs(diffY)) {
-                    // Es horizontal, prevenir scroll vertical
-                    if (e.cancelable) e.preventDefault();
-                }
+function initTouchEvents() {
+    const carousel = document.getElementById('productsCarousel');
+    if (carousel) {
+        carousel.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, {passive: true});
+        carousel.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, {passive: true});
+    }
+
+    // Fix iOS: :hover no funciona en táctil — usar clase .flipped
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    if (isIOS || isTouchDevice) {
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.addEventListener('touchstart', function(e) {
+                if (e.target.closest('button, a, .add-btn, .wa-btn')) return;
+                e.preventDefault();
+                const isFlipped = this.classList.contains('flipped');
+                document.querySelectorAll('.product-card.flipped').forEach(c => {
+                    if (c !== this) c.classList.remove('flipped');
+                });
+                this.classList.toggle('flipped', !isFlipped);
             }, {passive: false});
-            
-            carousel.addEventListener('touchend', (e) => {
-                if (!isSwiping) return;
-                isSwiping = false;
-                
-                touchEndX = e.changedTouches[0].screenX;
-                const diffX = touchStartX - touchEndX;
-                const diffY = touchStartY - e.changedTouches[0].screenY;
-                
-                // Solo procesar si el movimiento horizontal es mayor que el vertical
-                if (Math.abs(diffX) > Math.abs(diffY)) {
-                    handleSwipe();
-                }
-            }, {passive: true});
-        }
+        });
+    }
+}
 
         function handleSwipe() {
             const swipeThreshold = 50;
@@ -2963,8 +2660,6 @@
                 cartModal.classList.add('active');
                 cartOverlay.classList.add('active');
                 document.body.style.overflow = 'hidden';
-                // FIX iOS: Agregar clase para evitar rubber band
-                document.body.classList.add('menu-open');
                 renderCartItems();
             }
         }
@@ -2977,8 +2672,6 @@
                 cartModal.classList.remove('active');
                 cartOverlay.classList.remove('active');
                 document.body.style.overflow = '';
-                // FIX iOS: Remover clase
-                document.body.classList.remove('menu-open');
             }
         }
 
@@ -3136,8 +2829,6 @@
             menuToggle.setAttribute('aria-expanded', 'true');
             mobileMenuOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
-            // FIX iOS: Agregar clase para evitar rubber band
-            document.body.classList.add('menu-open');
         }
 
         function closeMobileMenu() {
@@ -3148,19 +2839,10 @@
             menuToggle.setAttribute('aria-expanded', 'false');
             mobileMenuOverlay.classList.remove('active');
             document.body.style.overflow = '';
-            // FIX iOS: Remover clase
-            document.body.classList.remove('menu-open');
         }
 
         if (menuToggle) {
             menuToggle.addEventListener('click', (e) => {
-                e.stopPropagation();
-                toggleMobileMenu();
-            });
-            
-            // FIX iOS: Soporte para touch events
-            menuToggle.addEventListener('touchend', (e) => {
-                e.preventDefault();
                 e.stopPropagation();
                 toggleMobileMenu();
             });
@@ -3205,9 +2887,9 @@
             }, 3000);
         }
 
-        // ===== MOUSE PARALLAX - Desactivado en móvil/iOS =====
+        // ===== MOUSE PARALLAX =====
         const hero = document.querySelector('.hero');
-        if (hero && !window.matchMedia('(prefers-reduced-motion: reduce)').matches && !isIOS) {
+        if (hero && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             hero.addEventListener('mousemove', (e) => {
                 const x = (e.clientX / window.innerWidth - 0.5) * 12;
                 const y = (e.clientY / window.innerHeight - 0.5) * 12;
@@ -3225,8 +2907,8 @@
             let clickCount = 0;
             let clickTimer = null;
             
-            // FIX iOS: Usar touchstart para mejor respuesta en iOS
-            const handleAdminClick = (e) => {
+            adminLogo.addEventListener('click', (e) => {
+                // Prevenir navegación normal del enlace
                 e.preventDefault();
                 
                 if (clickTimer) clearTimeout(clickTimer);
@@ -3238,14 +2920,9 @@
                 
                 if (clickCount >= 5) { 
                     clickCount = 0; 
+                    // Navegar en la misma ventana (sin target="_blank")
                     window.location.href = 'admin.html'; 
                 }
-            };
-            
-            adminLogo.addEventListener('click', handleAdminClick);
-            adminLogo.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                handleAdminClick(e);
             });
         }
 
@@ -3281,12 +2958,14 @@
             }
         }
 
+        // Función principal de sincronización automática para usuarios
         async function autoSyncWithCloud() {
             if (isSyncing) return;
             isSyncing = true;
 
             console.log('🔄 Iniciando sincronización automática de productos...');
 
+            // 1. Cargar productos locales inmediatamente (UX rápida)
             const stored = localStorage.getItem('ezentia_products');
             let localProducts = [];
 
@@ -3299,12 +2978,14 @@
                 }
             }
 
+            // 2. Si no hay Supabase, terminar aquí
             if (!supabaseClient && !initSupabaseClient()) {
                 console.log('⚠️ Sin conexión a Supabase, usando solo datos locales');
                 isSyncing = false;
                 return;
             }
 
+            // 3. Intentar obtener productos de la nube en segundo plano
             try {
                 console.log('☁️ Consultando productos en la nube...');
                 const { data: cloudProducts, error } = await supabaseClient
@@ -3317,6 +2998,7 @@
                 if (cloudProducts && cloudProducts.length > 0) {
                     console.log(`☁️ ${cloudProducts.length} productos encontrados en la nube`);
 
+                    // Convertir formato de Supabase al formato local
                     const formattedProducts = cloudProducts.map(p => ({
                         id: parseInt(p.id) || p.id,
                         name: p.name || '',
@@ -3332,13 +3014,18 @@
                         desc: p.desc || ''
                     }));
 
+                    // Comparar con locales para detectar cambios
                     const hasChanges = JSON.stringify(formattedProducts) !== JSON.stringify(localProducts);
 
                     if (hasChanges) {
                         console.log('🔄 Actualizando catálogo desde la nube...');
                         localStorage.setItem('ezentia_products', JSON.stringify(formattedProducts));
+
+                        // Recargar la vista con los nuevos productos
                         bestsellersData = formattedProducts;
                         loadBestSellers();
+
+                        // Mostrar notificación sutil al usuario
                         showSyncNotification('Catálogo actualizado ✓');
                     } else {
                         console.log('✅ Catálogo ya está sincronizado');
@@ -3349,12 +3036,15 @@
 
             } catch (err) {
                 console.error('❌ Error sincronizando:', err.message);
+                // Silenciosamente fallar - los usuarios ven los datos locales
             } finally {
                 isSyncing = false;
             }
         }
 
+        // Mostrar notificación de sincronización
         function showSyncNotification(message, type = 'success') {
+            // Remover notificación anterior si existe
             const existing = document.getElementById('sync-notification');
             if (existing) existing.remove();
 
@@ -3373,7 +3063,6 @@
                 z-index: 9999;
                 animation: slideInRight 0.3s ease;
                 backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
                 box-shadow: 0 4px 20px rgba(0,0,0,0.3);
                 border: 1px solid rgba(255,255,255,0.2);
                 font-family: 'Hoefler Text', serif;
@@ -3390,6 +3079,7 @@
             }, 2500);
         }
 
+        // Agregar estilos de animación para la notificación
         const syncStyles = document.createElement('style');
         syncStyles.textContent = `
             @keyframes slideInRight {
@@ -3403,11 +3093,12 @@
         `;
         document.head.appendChild(syncStyles);
 
+        // Sincronizar periódicamente (cada 5 minutos) y cuando la página vuelve a estar visible
         setInterval(() => {
             if (document.visibilityState === 'visible' && !isSyncing) {
                 autoSyncWithCloud();
             }
-        }, 300000);
+        }, 300000); // 5 minutos
 
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'visible' && !isSyncing) {
@@ -3417,16 +3108,16 @@
 
         // ===== INICIALIZACIÓN =====
         document.addEventListener('DOMContentLoaded', () => {
-            // FIX iOS: Ajustar altura inicial
-            setViewportHeight();
-            
-            // Inicializar Supabase y sincronizar
+            // Inicializar Supabase y sincronizar automáticamente
             initSupabaseClient();
+
+            // Cargar productos locales primero (rápido)
             loadBestSellers();
-            
+
+            // Luego sincronizar con la nube en segundo plano
             setTimeout(() => {
                 autoSyncWithCloud();
-            }, 500);
+            }, 500); // Pequeño delay para no bloquear la carga inicial
 
             initTouchEvents();
             updateCartCount();
@@ -3437,13 +3128,12 @@
             const newIsMobile = window.innerWidth <= 768;
             if (newIsMobile !== isMobile) {
                 isMobile = newIsMobile;
+                // Recargar para ajustar vista si es necesario
                 if (isMobile) {
                     currentSlide = 0;
                     updateCarousel();
                 }
             }
-            // FIX iOS: Actualizar altura del viewport
-            setViewportHeight();
         });
     </script>
 </body>
