@@ -356,15 +356,14 @@
         .panel.active { display: block; }
 
         .tabs {
-            display: flex;
+            display: grid;
+            justify-content: center;
             gap: 0;
             margin-bottom: 2rem;
             border-bottom: 1px solid var(--glass-border);
             background: var(--glass-bg);
             backdrop-filter: var(--glass-blur);
-            border-radius: 10px 10px 0 0;
-            padding: 0 1rem;
-            overflow-x: auto;
+            border-radius: 10px 10px 9 0;
         }
 
         .tab-btn {
