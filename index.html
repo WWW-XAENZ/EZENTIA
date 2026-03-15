@@ -2073,6 +2073,20 @@
                 scroll-behavior: auto !important;
             }
         }
+
+        /* Desactivar hover en dispositivos táctiles para evitar conflictos */
+@media (pointer: coarse) {
+    .product-card:hover .card-inner {
+        transform: none;
+        -webkit-transform: none;
+    }
+    
+    .product-card.flipped .card-inner {
+        transform: rotateY(180deg);
+        -webkit-transform: rotateY(180deg);
+    }
+}
+
     </style>
     
     <!-- Supabase SDK para sincronización automática -->
@@ -2497,7 +2511,50 @@
             }));
 
             // Inicializar tap en tarjetas para iOS/móviles después de cargar
-            initCardFlip();
+            // ===== FIX PARA iOS: MANEJAR TAP EN TARJETAS =====
+function initCardFlip() {
+    // Detectar si es dispositivo táctil
+    const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+    
+    document.querySelectorAll('.product-card').forEach(card => {
+        // Remover listeners anteriores clonando
+        const newCard = card.cloneNode(true);
+        card.parentNode.replaceChild(newCard, card);
+        
+        // Variable para trackear estado
+        let isFlipped = false;
+        
+        newCard.addEventListener('click', function(e) {
+            // Si se hizo click en botones de acción, no hacer flip
+            if (e.target.closest('.add-btn') || e.target.closest('.wa-btn')) {
+                e.stopPropagation();
+                return;
+            }
+            
+            // Toggle estado
+            isFlipped = !isFlipped;
+            
+            // Aplicar/quitar clase
+            if (isFlipped) {
+                this.classList.add('flipped');
+            } else {
+                this.classList.remove('flipped');
+            }
+        });
+        
+        // También manejar clicks específicos en la parte trasera para cerrar
+        const cardBack = newCard.querySelector('.card-back');
+        if (cardBack) {
+            cardBack.addEventListener('click', function(e) {
+                // Solo cerrar si no se hizo click en botones
+                if (!e.target.closest('.add-btn') && !e.target.closest('.wa-btn')) {
+                    isFlipped = false;
+                    newCard.classList.remove('flipped');
+                }
+            });
+        }
+    });
+}
         }
 
         function generateProductCard(product) {
