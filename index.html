@@ -848,9 +848,12 @@
             text-align: center;
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
+            overflow: hidden;
             cursor: pointer;
             width: 320px;
             height: 420px;
+            perspective: 1000px;
+            -webkit-perspective: 1000px;
         }
 
         .product-card[data-category="hombre"],
@@ -904,24 +907,23 @@
         }
 
         .card-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.8s;
-    transform-style: preserve-3d;
-    -webkit-transform-style: preserve-3d;
-    perspective: 1000px;
-    -webkit-perspective: 1000px;
-}
-
-.product-card:hover .card-inner,
-.product-card.flipped .card-inner {
-    transform: rotateY(180deg);
-    -webkit-transform: rotateY(180deg);
-}
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+            -webkit-transform-style: preserve-3d;
+        }
 
         .product-card:hover .card-inner {
             transform: rotateY(180deg);
+            -webkit-transform: rotateY(180deg);
+        }
+
+        /* FIX PARA iOS: Clase flipped para dispositivos táctiles */
+        .product-card.flipped .card-inner {
+            transform: rotateY(180deg);
+            -webkit-transform: rotateY(180deg);
         }
 
         .card-front,
@@ -935,15 +937,26 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            overflow: hidden;
-            border-radius: inherit;
+            /* Fix para iOS: forzar aceleración por hardware */
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
         }
 
         .card-back {
-            transform: rotateY(180deg);
+            transform: rotateY(180deg) translateZ(1px);
+            -webkit-transform: rotateY(180deg) translateZ(1px);
             background: linear-gradient(135deg, #ffffff, rgba(233, 156, 50, 0.05));
             border: 2px solid #e99c32;
-            -webkit-transform: rotateY(180deg);
+            /* Asegurar que esté por encima en iOS */
+            z-index: 2;
+        }
+
+        /* Fix adicional para iOS Safari */
+        @supports (-webkit-touch-callout: none) {
+            .card-back {
+                transform: rotateY(180deg) translateZ(1px);
+                -webkit-transform: rotateY(180deg) translateZ(1px);
+            }
         }
 
         .flip-hint {
@@ -2126,7 +2139,7 @@
                 <div class="splash-particle"></div>
                 <div class="splash-particle"></div>
                 <div class="splash-ring splash-ring-1"></div>
-                <div class="                <div class="splash-ring splash-ring-2"></div>
+                <div class="splash-ring splash-ring-2"></div>
                 <div class="splash-ring splash-ring-3"></div>
                 <img src="ezentiaWhite.png" alt="EZENTIA" class="hero-logo" width="360" height="auto" loading="eager">
             </div>
@@ -2482,6 +2495,9 @@
                 img: p.image || p.img,
                 cat: p.cat || p.category || 'unisex'
             }));
+
+            // Inicializar tap en tarjetas para iOS/móviles después de cargar
+            initCardFlip();
         }
 
         function generateProductCard(product) {
@@ -2522,6 +2538,28 @@
             return products.map(product => generateProductCard(product)).join('');
         }
 
+        // ===== FIX PARA iOS: MANEJAR TAP EN TARJETAS =====
+        function initCardFlip() {
+            // Detectar si es dispositivo táctil
+            const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+            
+            document.querySelectorAll('.product-card').forEach(card => {
+                // Remover listeners anteriores si existen
+                const newCard = card.cloneNode(true);
+                card.parentNode.replaceChild(newCard, card);
+                
+                newCard.addEventListener('click', function(e) {
+                    // No flip si se hizo click en botones
+                    if (e.target.closest('.add-btn') || e.target.closest('.wa-btn')) {
+                        return;
+                    }
+                    
+                    // Toggle clase flipped
+                    this.classList.toggle('flipped');
+                });
+            });
+        }
+
         // ===== CARRUSEL MÓVIL MEJORADO =====
         function loadCarousel() {
             const carousel = document.getElementById('productsCarousel');
@@ -2550,6 +2588,9 @@
             totalSlides = bestsellersData.length;
             currentSlide = 0;
             updateCarousel();
+
+            // Re-inicializar tap en tarjetas del carrusel
+            setTimeout(initCardFlip, 100);
         }
 
         function updateCarousel() {
@@ -2591,35 +2632,19 @@
         let touchStartX = 0;
         let touchEndX = 0;
 
-function initTouchEvents() {
-    const carousel = document.getElementById('productsCarousel');
-    if (carousel) {
-        carousel.addEventListener('touchstart', (e) => {
-            touchStartX = e.changedTouches[0].screenX;
-        }, {passive: true});
-        carousel.addEventListener('touchend', (e) => {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-        }, {passive: true});
-    }
-
-    // Fix iOS: :hover no funciona en táctil — usar clase .flipped
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    if (isIOS || isTouchDevice) {
-        document.querySelectorAll('.product-card').forEach(card => {
-            card.addEventListener('touchstart', function(e) {
-                if (e.target.closest('button, a, .add-btn, .wa-btn')) return;
-                e.preventDefault();
-                const isFlipped = this.classList.contains('flipped');
-                document.querySelectorAll('.product-card.flipped').forEach(c => {
-                    if (c !== this) c.classList.remove('flipped');
-                });
-                this.classList.toggle('flipped', !isFlipped);
-            }, {passive: false});
-        });
-    }
-}
+        function initTouchEvents() {
+            const carousel = document.getElementById('productsCarousel');
+            if (!carousel) return;
+            
+            carousel.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, {passive: true});
+            
+            carousel.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, {passive: true});
+        }
 
         function handleSwipe() {
             const swipeThreshold = 50;
@@ -2901,14 +2926,13 @@ function initTouchEvents() {
             });
         }
 
-        // ===== ADMIN ACCESS (5 clicks) - CORREGIDO =====
+        // ===== ADMIN ACCESS (5 clicks) =====
         const adminLogo = document.getElementById('adminLogo');
         if (adminLogo) {
             let clickCount = 0;
             let clickTimer = null;
             
             adminLogo.addEventListener('click', (e) => {
-                // Prevenir navegación normal del enlace
                 e.preventDefault();
                 
                 if (clickTimer) clearTimeout(clickTimer);
@@ -2920,7 +2944,6 @@ function initTouchEvents() {
                 
                 if (clickCount >= 5) { 
                     clickCount = 0; 
-                    // Navegar en la misma ventana (sin target="_blank")
                     window.location.href = 'admin.html'; 
                 }
             });
@@ -2958,14 +2981,12 @@ function initTouchEvents() {
             }
         }
 
-        // Función principal de sincronización automática para usuarios
         async function autoSyncWithCloud() {
             if (isSyncing) return;
             isSyncing = true;
 
             console.log('🔄 Iniciando sincronización automática de productos...');
 
-            // 1. Cargar productos locales inmediatamente (UX rápida)
             const stored = localStorage.getItem('ezentia_products');
             let localProducts = [];
 
@@ -2978,14 +2999,12 @@ function initTouchEvents() {
                 }
             }
 
-            // 2. Si no hay Supabase, terminar aquí
             if (!supabaseClient && !initSupabaseClient()) {
                 console.log('⚠️ Sin conexión a Supabase, usando solo datos locales');
                 isSyncing = false;
                 return;
             }
 
-            // 3. Intentar obtener productos de la nube en segundo plano
             try {
                 console.log('☁️ Consultando productos en la nube...');
                 const { data: cloudProducts, error } = await supabaseClient
@@ -2998,7 +3017,6 @@ function initTouchEvents() {
                 if (cloudProducts && cloudProducts.length > 0) {
                     console.log(`☁️ ${cloudProducts.length} productos encontrados en la nube`);
 
-                    // Convertir formato de Supabase al formato local
                     const formattedProducts = cloudProducts.map(p => ({
                         id: parseInt(p.id) || p.id,
                         name: p.name || '',
@@ -3014,18 +3032,13 @@ function initTouchEvents() {
                         desc: p.desc || ''
                     }));
 
-                    // Comparar con locales para detectar cambios
                     const hasChanges = JSON.stringify(formattedProducts) !== JSON.stringify(localProducts);
 
                     if (hasChanges) {
                         console.log('🔄 Actualizando catálogo desde la nube...');
                         localStorage.setItem('ezentia_products', JSON.stringify(formattedProducts));
-
-                        // Recargar la vista con los nuevos productos
                         bestsellersData = formattedProducts;
                         loadBestSellers();
-
-                        // Mostrar notificación sutil al usuario
                         showSyncNotification('Catálogo actualizado ✓');
                     } else {
                         console.log('✅ Catálogo ya está sincronizado');
@@ -3036,15 +3049,12 @@ function initTouchEvents() {
 
             } catch (err) {
                 console.error('❌ Error sincronizando:', err.message);
-                // Silenciosamente fallar - los usuarios ven los datos locales
             } finally {
                 isSyncing = false;
             }
         }
 
-        // Mostrar notificación de sincronización
         function showSyncNotification(message, type = 'success') {
-            // Remover notificación anterior si existe
             const existing = document.getElementById('sync-notification');
             if (existing) existing.remove();
 
@@ -3079,7 +3089,6 @@ function initTouchEvents() {
             }, 2500);
         }
 
-        // Agregar estilos de animación para la notificación
         const syncStyles = document.createElement('style');
         syncStyles.textContent = `
             @keyframes slideInRight {
@@ -3093,12 +3102,11 @@ function initTouchEvents() {
         `;
         document.head.appendChild(syncStyles);
 
-        // Sincronizar periódicamente (cada 5 minutos) y cuando la página vuelve a estar visible
         setInterval(() => {
             if (document.visibilityState === 'visible' && !isSyncing) {
                 autoSyncWithCloud();
             }
-        }, 300000); // 5 minutos
+        }, 300000);
 
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'visible' && !isSyncing) {
@@ -3108,17 +3116,11 @@ function initTouchEvents() {
 
         // ===== INICIALIZACIÓN =====
         document.addEventListener('DOMContentLoaded', () => {
-            // Inicializar Supabase y sincronizar automáticamente
             initSupabaseClient();
-
-            // Cargar productos locales primero (rápido)
             loadBestSellers();
-
-            // Luego sincronizar con la nube en segundo plano
             setTimeout(() => {
                 autoSyncWithCloud();
-            }, 500); // Pequeño delay para no bloquear la carga inicial
-
+            }, 500);
             initTouchEvents();
             updateCartCount();
         });
@@ -3128,7 +3130,6 @@ function initTouchEvents() {
             const newIsMobile = window.innerWidth <= 768;
             if (newIsMobile !== isMobile) {
                 isMobile = newIsMobile;
-                // Recargar para ajustar vista si es necesario
                 if (isMobile) {
                     currentSlide = 0;
                     updateCarousel();
