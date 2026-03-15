@@ -1610,7 +1610,7 @@
             }
         }
 
-        /* Reducir motion para accesibilidad */
+               /* Reducir motion para accesibilidad */
         @media (prefers-reduced-motion: reduce) {
             *,
             *::before,
@@ -1621,7 +1621,42 @@
                 scroll-behavior: auto !important;
             }
         }
+
+        /* ===== FIX PARA iOS: Desactivar hover en táctiles y fix de flip ===== */
+        @media (pointer: coarse) {
+            .product-card:hover .card-inner {
+                transform: none;
+                -webkit-transform: none;
+            }
+            
+            .product-card.flipped .card-inner {
+                transform: rotateY(180deg);
+                -webkit-transform: rotateY(180deg);
+            }
+        }
+
+        /* Fix adicional para iOS Safari */
+        @supports (-webkit-touch-callout: none) {
+            .card-inner {
+                -webkit-transform-style: preserve-3d;
+                transform-style: preserve-3d;
+            }
+            
+            .card-front, .card-back {
+                -webkit-backface-visibility: hidden;
+                backface-visibility: hidden;
+                -webkit-transform: translateZ(0);
+                transform: translateZ(0);
+            }
+            
+            .card-back {
+                transform: rotateY(180deg) translateZ(1px);
+                -webkit-transform: rotateY(180deg) translateZ(1px);
+                z-index: 2;
+            }
+        }
     </style>
+    
 </head>
 <body>
     <!-- Overlay para menú móvil -->
@@ -1983,7 +2018,7 @@
             }
 
             return `
-                <div class="product-card" data-category="${categoria}" data-id="${product.id}">
+                <div class="product-card" data-category="${categoria}" data-id="${product.id}" onclick="handleCardFlip(this, event)">
                     <div class="category-indicator"></div>
                     <span class="category-badge">${categoria}</span>
                     <div class="card-inner">
@@ -1995,7 +2030,7 @@
                             <h3 class="product-name">${displayName}</h3>
                             <p class="product-brand">${product.brand}</p>
                             <p class="product-price">$${parseInt(product.price).toLocaleString('es-CO')}</p>
-                            <p class="flip-hint">Gira para más info</p>
+                            <p class="flip-hint">Toca para más info</p>
                         </div>
                         <div class="card-back">
                             <h3 class="product-name">${product.name}</h3>
@@ -2004,13 +2039,24 @@
                             <p class="product-meta"><span>Duración: ${product.duration || '6-8 horas'}</span></p>
                             <p class="product-meta"><span>Sillage: ${product.sillage || 'Moderado'}</span></p>
                             <div class="product-actions">
-                                <button class="add-btn" id="btn-${product.id}" onclick="addToCart(${product.id}, this)">+ Carrito</button>
-                                <a href="https://wa.me/573016952398?text=Hola,%20me%20interesa%20comprar%20${encodeURIComponent(product.name)}" class="wa-btn" target="_blank" rel="noopener">WhatsApp</a>
+                                <button class="add-btn" id="btn-${product.id}" onclick="event.stopPropagation(); addToCart(${product.id}, this)">+ Carrito</button>
+                                <a href="https://wa.me/573016952398?text=Hola,%20me%20interesa%20comprar%20${encodeURIComponent(product.name)}" class="wa-btn" target="_blank" rel="noopener" onclick="event.stopPropagation()">WhatsApp</a>
                             </div>
                         </div>
                     </div>
                 </div>
             `;
+        }
+
+                // ===== FIX PARA iOS: MANEJAR TAP EN TARJETAS =====
+        function handleCardFlip(card, event) {
+            // No hacer flip si se hizo click en botones o enlaces
+            if (event.target.closest('.add-btn') || event.target.closest('.wa-btn')) {
+                return;
+            }
+            
+            // Toggle clase flipped
+            card.classList.toggle('flipped');
         }
 
         function escapeRegex(string) {
